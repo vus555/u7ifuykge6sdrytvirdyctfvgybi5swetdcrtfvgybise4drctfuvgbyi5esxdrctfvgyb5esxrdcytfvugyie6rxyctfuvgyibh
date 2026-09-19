@@ -14,27 +14,15 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100dvh;overflow:hidden;font-family:'Nunito',sans-serif}
 
-/* 🎨 ФОН рабочего стола */
+/* 🎨 ФОН */
 body{
   background: var(--wallpaper-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position:relative;
-  transition: background .45s ease;
+  background-size: cover;background-position: center;background-repeat: no-repeat;
+  position:relative;transition: background .45s ease;
 }
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background: var(--wallpaper-glow, none);
-  pointer-events:none;
-  z-index:0;
-  transition: background .45s ease;
-}
+body::before{content:'';position:fixed;inset:0;background: var(--wallpaper-glow, none);pointer-events:none;z-index:0;transition: background .45s ease}
 body[data-wallpaper="custom"]{--wallpaper-bg:#142541;--wallpaper-glow:none}
 body[data-wallpaper="custom"]::before{display:none}
-
 body[data-wallpaper="blue"]{--wallpaper-bg:linear-gradient(160deg,#24395f 0%,#17294b 43%,#142541 100%);--wallpaper-glow:radial-gradient(circle at 15% 15%,rgba(88,124,255,.35),transparent 40%),radial-gradient(circle at 85% 80%,rgba(225,104,181,.22),transparent 40%)}
 body[data-wallpaper="sunset"]{--wallpaper-bg:linear-gradient(160deg,#6b2d4a 0%,#d5603f 45%,#f0a458 100%);--wallpaper-glow:radial-gradient(circle at 20% 20%,rgba(255,200,120,.45),transparent 45%),radial-gradient(circle at 80% 85%,rgba(180,60,120,.35),transparent 45%)}
 body[data-wallpaper="ocean"]{--wallpaper-bg:linear-gradient(160deg,#0a3d62 0%,#1e6091 45%,#52b0c9 100%);--wallpaper-glow:radial-gradient(circle at 15% 20%,rgba(120,230,220,.40),transparent 45%),radial-gradient(circle at 85% 80%,rgba(40,120,200,.35),transparent 45%)}
@@ -60,6 +48,7 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .app-item:active{transform:scale(.88)}
 .app-icon-wrap{position:relative;width:clamp(60px,17vw,72px);aspect-ratio:1;transition: transform .35s cubic-bezier(.34,1.56,.64,1)}
 .app-item.semi-big .app-icon-wrap{width:clamp(78px,21.5vw,90px)}
+.app-item.slightly-smaller .app-icon-wrap{width:clamp(74px,20.4vw,85px)}
 .app-icon{position:absolute;inset:0;border-radius:33%;background:var(--app-color);overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,.35),0 3px 6px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.12);display:grid;place-items:center}
 .app-icon::before{content:'';position:absolute;inset:1px 1px 50% 1px;border-radius:33% 33% 45% 45%;background:linear-gradient(180deg,rgba(255,255,255,.4),transparent);pointer-events:none;z-index:2}
 .app-icon svg{position:relative;z-index:3;width:58%;height:58%;color:#fff;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
@@ -69,15 +58,8 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .app-label{font-weight:700;font-size:11.5px;line-height:1.15;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);text-align:center;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .app-badge{position:absolute;top:-6px;right:-6px;z-index:10;min-width:23px;height:23px;padding:0 6px;display:grid;place-items:center;border-radius:999px;color:#fff;background:#ff3b30;border:2.5px solid #24395f;font-size:12px;font-weight:800}
 
-/* ✨ ЭФФЕКТ «ТАП ПО ИКОНКЕ» — иконка пружинит */
-@keyframes iconPulse{
-  0%{transform:scale(1)}
-  40%{transform:scale(.82)}
-  100%{transform:scale(1)}
-}
-.app-item.opening .app-icon-wrap{
-  animation: iconPulse .4s cubic-bezier(.4,0,.2,1);
-}
+@keyframes iconPulse{0%{transform:scale(1)}40%{transform:scale(.82)}100%{transform:scale(1)}}
+.app-item.opening .app-icon-wrap{animation: iconPulse .4s cubic-bezier(.4,0,.2,1)}
 
 /* ⚙️ НАСТРОЙКИ */
 .settings-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease}
@@ -88,7 +70,6 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .settings-handle{width:44px;height:5px;border-radius:99px;background:rgba(255,255,255,.3);margin:0 auto 16px}
 .settings-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
 .settings-subtitle{font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:18px}
-
 .theme-section{margin-bottom:22px}
 .theme-label{font-size:14px;font-weight:800;color:#fff;margin-bottom:10px}
 .theme-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -99,7 +80,6 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .theme-preview.dark{background:#0C0C0C}
 .theme-preview.light{background:#f5f0e3}
 .theme-name{font-size:12px;font-weight:700;color:#fff}
-
 .wallpaper-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
 .wallpaper-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:transparent;border:0;padding:0;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s ease}
 .wallpaper-item:active{transform:scale(.94)}
@@ -119,208 +99,88 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .settings-btn:active{transform:scale(.97)}
 #fileInput{display:none}
 
-/* ═══════════════════════════════════════ */
-/* 🛒 МАРКЕТПЛЕЙС — с анимацией раскрытия из иконки */
-/* ═══════════════════════════════════════ */
-.market-screen{
-  position:fixed;inset:0;z-index:100;
-  display:flex;flex-direction:column;
-  background: #0C0C0C;
-  transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
-  transform: scale(0);
-  opacity:0;
-  visibility:hidden;
-  border-radius: 33%;
-  overflow: hidden;
-  pointer-events: none;
-  transition:
-    transform .5s cubic-bezier(.4,0,.2,1),
-    opacity .3s ease,
-    visibility .5s ease,
-    border-radius .5s ease;
-}
-.market-screen.open{
-  transform: scale(1);
-  opacity:1;
-  visibility:visible;
-  border-radius: 0;
-  pointer-events: auto;
-}
-.market-screen.closing{
-  transform: scale(0);
-  opacity:0;
-  border-radius: 33%;
-  pointer-events: none;
-}
+/* ✨ ПРИВЕТСТВЕННОЕ ОКНО */
+.welcome-overlay{position:fixed;inset:0;z-index:200;background: rgba(0,0,0,.65);backdrop-filter: blur(10px);-webkit-backdrop-filter: blur(10px);display:grid;place-items:center;padding: 24px;opacity:0;visibility:hidden;pointer-events:none;transition: opacity .35s ease, visibility .35s ease}
+.welcome-overlay.open{opacity:1;visibility:visible;pointer-events:auto}
+.welcome-box{width:100%;max-width: 340px;background: #141414;border: 1px solid rgba(245,179,1,.2);border-radius: 28px;padding: 32px 24px 24px;position:relative;overflow:hidden;text-align:center;transform: scale(.85) translateY(20px);opacity:0;transition: transform .45s cubic-bezier(.34,1.56,.64,1), opacity .35s ease;box-shadow: 0 20px 60px rgba(0,0,0,.6)}
+.welcome-overlay.open .welcome-box{transform: scale(1) translateY(0);opacity:1}
+.welcome-box::before{content:'';position:absolute;top:0;right:0;width:52px;height:52px;background: #F5B301;clip-path: polygon(100% 0, 0 0, 100% 100%)}
+.welcome-icon{width:80px;height:80px;margin: 0 auto 20px;border-radius: 24px;background: rgba(245,179,1,.1);border: 1.5px solid rgba(245,179,1,.25);display:grid;place-items:center;color:#F5B301;position:relative}
+.welcome-icon svg{width:42px;height:42px}
+.welcome-icon::after{content:'';position:absolute;inset:-6px;border-radius: 28px;border: 1.5px solid rgba(245,179,1,.15);animation: welcomePulse 2s ease-in-out infinite}
+@keyframes welcomePulse{0%, 100%{ transform: scale(1); opacity: .8; }50%{ transform: scale(1.08); opacity: .3; }}
+.welcome-title{font-size:22px;font-weight: 900;color:#fff;margin-bottom: 10px;line-height:1.2}
+.welcome-title span{ color:#F5B301; }
+.welcome-text{font-size: 14px;font-weight: 600;color: rgba(255,255,255,.6);line-height: 1.5;margin-bottom: 26px}
+.welcome-list{display: flex;flex-direction: column;gap: 10px;margin-bottom: 24px;text-align: left}
+.welcome-list-item{display: flex;align-items: center;gap: 10px;font-size: 13px;font-weight: 700;color: rgba(255,255,255,.75);padding: 10px 14px;border-radius: 12px;background: rgba(245,179,1,.05);border: 1px solid rgba(245,179,1,.1)}
+.welcome-list-item svg{width: 16px;height: 16px;color: #F5B301;flex-shrink: 0}
+.welcome-buttons{display: grid;grid-template-columns: 1fr 1.4fr;gap: 10px}
+.welcome-btn{padding: 14px;border-radius: 14px;border: 0;font-family: inherit;font-size: 14px;font-weight: 800;cursor: pointer;transition: transform .15s ease, background .2s ease;-webkit-tap-highlight-color: transparent}
+.welcome-btn:active{ transform: scale(.95); }
+.welcome-btn-cancel{background: rgba(255,255,255,.06);color: rgba(255,255,255,.7);border: 1px solid rgba(255,255,255,.1)}
+.welcome-btn-enter{background: #F5B301;color: #0C0C0C;box-shadow: 0 8px 20px rgba(245,179,1,.35)}
 
-/* затемнение фона рабочего стола */
-.desktop-dim{
-  position:fixed;inset:0;z-index:90;
-  background: rgba(0,0,0,.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transition: opacity .35s ease, visibility .35s ease;
-}
+/* 🌑 ОБЩИЙ ЭКРАН */
+.app-screen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background: #0C0C0C;transform: scale(0);opacity:0;visibility:hidden;border-radius: 33%;overflow: hidden;pointer-events: none;transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .3s ease, visibility .5s ease, border-radius .5s ease}
+.app-screen.open{transform: scale(1);opacity:1;visibility:visible;border-radius: 0;pointer-events: auto}
+.app-screen.closing{transform: scale(0);opacity:0;border-radius: 33%;pointer-events: none}
+.desktop-dim{position:fixed;inset:0;z-index:90;background: rgba(0,0,0,.5);backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);opacity:0;visibility:hidden;pointer-events:none;transition: opacity .35s ease, visibility .35s ease}
 .desktop-dim.show{opacity:1;visibility:visible}
+.app-statusbar{flex-shrink:0;height:50px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:17px;color:#fff;background:#000}
+.app-statusbar .status-right{display:flex;align-items:center;gap:7px}
+.app-statusbar .status-right svg{width:17px;height:17px}
+.app-statusbar .battery{position:relative;width:26px;height:13px;border:1.7px solid currentColor;border-radius:4px;padding:1.7px}
+.app-statusbar .battery::after{content:'';position:absolute;right:-4px;top:3.5px;width:2.5px;height:5px;background:currentColor;border-radius:0 2px 2px 0}
+.app-statusbar .battery i{display:block;width:80%;height:100%;background:currentColor;border-radius:1.7px}
+.app-statusbar .battery-text{font-size:15px;font-weight:800;margin-left:2px}
 
-.market-statusbar{
-  flex-shrink:0;
-  height:50px;
-  padding:0 26px;
-  display:flex;align-items:center;justify-content:space-between;
-  font-weight:800;
-  font-size:17px;
-  color:#fff;
-  background:#000;
-}
-.market-statusbar .status-right{display:flex;align-items:center;gap:7px}
-.market-statusbar .status-right svg{width:17px;height:17px}
-.market-statusbar .battery{position:relative;width:26px;height:13px;border:1.7px solid currentColor;border-radius:4px;padding:1.7px}
-.market-statusbar .battery::after{content:'';position:absolute;right:-4px;top:3.5px;width:2.5px;height:5px;background:currentColor;border-radius:0 2px 2px 0}
-.market-statusbar .battery i{display:block;width:80%;height:100%;background:currentColor;border-radius:1.7px}
-.market-statusbar .battery-text{font-size:15px;font-weight:800;margin-left:2px}
+/* 🔶 ЦВЕТНОЙ АКЦЕНТ ЧЕРЕЗ ПЕРЕМЕННУЮ */
+.market-screen{ --accent: #F5B301; --accent-rgb: 245,179,1; }
+.warehouse-screen{ --accent: #C8894A; --accent-rgb: 200,137,74; }
 
-.market-header{
-  position:relative;
-  flex-shrink:0;
-  padding: 16px 20px 16px;
-  display:flex;align-items:center;gap:14px;
-  background: #0C0C0C;
-  border-bottom: 1px solid rgba(245,179,1,.15);
-  opacity:0;
-  transform: translateY(-10px);
-  transition: opacity .3s ease .15s, transform .3s ease .15s;
-}
-.market-screen.open .market-header{
-  opacity:1;
-  transform: translateY(0);
-}
-.market-header::after{
-  content:'';
-  position:absolute;
-  left:0;bottom:-1px;
-  width:90px;height:3px;
-  background:#F5B301;
-  border-radius:0 3px 3px 0;
-}
-.market-back{
-  width:42px;height:42px;flex-shrink:0;
-  border-radius:50%;border:0;
-  background: rgba(245,179,1,.1);
-  color:#F5B301;
-  display:grid;place-items:center;
-  cursor:pointer;
-  transition: background .2s ease, transform .15s ease;
-  -webkit-tap-highlight-color:transparent;
-}
-.market-back:active{transform:scale(.9);background:rgba(245,179,1,.2)}
-.market-back svg{width:22px;height:22px}
-.market-title{font-size:22px;font-weight:800;color:#fff;flex:1}
-.market-title small{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-top:2px}
+.app-header{position:relative;flex-shrink:0;padding: 16px 20px 16px;display:flex;align-items:center;gap:14px;background: #0C0C0C;border-bottom: 1px solid rgba(var(--accent-rgb),.15);opacity:0;transform: translateY(-10px);transition: opacity .3s ease .15s, transform .3s ease .15s}
+.app-screen.open .app-header{opacity:1;transform:translateY(0)}
+.app-header::after{content:'';position:absolute;left:0;bottom:-1px;width:90px;height:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.app-back{width:42px;height:42px;flex-shrink:0;border-radius:50%;border:0;background: rgba(var(--accent-rgb),.1);color:var(--accent);display:grid;place-items:center;cursor:pointer;transition: background .2s ease, transform .15s ease;-webkit-tap-highlight-color:transparent}
+.app-back:active{transform:scale(.9);background:rgba(var(--accent-rgb),.2)}
+.app-back svg{width:22px;height:22px}
+.app-title{font-size:22px;font-weight:800;color:#fff;flex:1}
+.app-title small{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-top:2px}
+.app-content{flex:1;overflow-y:auto;scrollbar-width:none;padding: 16px 16px 30px;position:relative}
+.app-content::-webkit-scrollbar{display:none}
 
-.market-content{flex:1;overflow-y:auto;scrollbar-width:none;padding: 16px 16px 30px;position:relative}
-.market-content::-webkit-scrollbar{display:none}
-
-.market-search{
-  position:relative;margin-bottom:16px;
-  opacity:0;transform: translateY(12px);
-  transition: opacity .35s ease .2s, transform .35s ease .2s;
-}
-.market-screen.open .market-search{opacity:1;transform:translateY(0)}
-.market-search input{
-  width:100%;height:48px;border-radius:16px;
-  border:1px solid rgba(245,179,1,.15);
-  background: rgba(245,179,1,.03);
-  color:#fff;font-family:inherit;font-size:15px;font-weight:600;
-  padding: 0 16px 0 46px;outline:none;
-  transition: border-color .2s ease, background .2s ease;
-}
+/* МАРКЕТ */
+.market-search{position:relative;margin-bottom:16px;opacity:0;transform: translateY(12px);transition: opacity .35s ease .2s, transform .35s ease .2s}
+.app-screen.open .market-search{opacity:1;transform:translateY(0)}
+.market-search input{width:100%;height:48px;border-radius:16px;border:1px solid rgba(245,179,1,.15);background: rgba(245,179,1,.03);color:#fff;font-family:inherit;font-size:15px;font-weight:600;padding: 0 16px 0 46px;outline:none;transition: border-color .2s ease, background .2s ease}
 .market-search input::placeholder{color:rgba(255,255,255,.35)}
 .market-search input:focus{border-color:#F5B301;background: rgba(245,179,1,.05)}
 .market-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:#F5B301;pointer-events:none}
-
-.market-filters{
-  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;padding-bottom:4px;
-  opacity:0;transform: translateY(12px);
-  transition: opacity .35s ease .25s, transform .35s ease .25s;
-}
-.market-screen.open .market-filters{opacity:1;transform:translateY(0)}
+.market-filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;padding-bottom:4px;opacity:0;transform: translateY(12px);transition: opacity .35s ease .25s, transform .35s ease .25s}
+.app-screen.open .market-filters{opacity:1;transform:translateY(0)}
 .market-filters::-webkit-scrollbar{display:none}
-.filter-chip{
-  flex-shrink:0;padding: 9px 16px;border-radius: 999px;
-  border:1px solid rgba(245,179,1,.18);
-  background: transparent;
-  color: rgba(255,255,255,.7);
-  font-family:inherit;font-size:13px;font-weight:700;
-  cursor:pointer;transition: all .2s ease;
-  -webkit-tap-highlight-color:transparent;white-space:nowrap;
-}
+.filter-chip{flex-shrink:0;padding: 9px 16px;border-radius: 999px;border:1px solid rgba(245,179,1,.18);background: transparent;color: rgba(255,255,255,.7);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition: all .2s ease;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 .filter-chip:active{transform:scale(.95)}
 .filter-chip.active{background: #F5B301;color:#0C0C0C;border-color:#F5B301;font-weight:800}
-
-.market-section-title{
-  font-size:15px;font-weight:800;color:#fff;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;position:relative;padding-left:14px;
-  opacity:0;transform: translateY(12px);
-  transition: opacity .35s ease .3s, transform .35s ease .3s;
-}
-.market-screen.open .market-section-title{opacity:1;transform:translateY(0)}
-.market-section-title::before{
-  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
-  width:4px;height:18px;background:#F5B301;border-radius:2px;
-}
+.market-section-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;position:relative;padding-left:14px;opacity:0;transform: translateY(12px);transition: opacity .35s ease .3s, transform .35s ease .3s}
+.app-screen.open .market-section-title{opacity:1;transform:translateY(0)}
+.market-section-title::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:18px;background:#F5B301;border-radius:2px}
 .market-section-title span{font-size:12px;font-weight:700;color:rgba(245,179,1,.75)}
-
 .market-list{display:flex;flex-direction:column;gap:20px}
-
-.phone-card{
-  position:relative;
-  background: #141414;
-  border:1px solid rgba(245,179,1,.12);
-  border-radius:26px;
-  overflow:hidden;
-  cursor:pointer;
-  transition: transform .2s ease, border-color .2s ease;
-  -webkit-tap-highlight-color:transparent;
-  opacity:0;
-  transform: translateY(30px);
-}
-.market-screen.open .phone-card{animation: cardIn .55s cubic-bezier(.34,1.56,.64,1) forwards}
+.phone-card{position:relative;background: #141414;border:1px solid rgba(245,179,1,.12);border-radius:26px;overflow:hidden;cursor:pointer;transition: transform .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent;opacity:0;transform: translateY(30px)}
+.app-screen.open .phone-card{animation: cardIn .55s cubic-bezier(.34,1.56,.64,1) forwards}
 .phone-card:active{transform: scale(.98)}
 @keyframes cardIn{to{opacity:1;transform:translateY(0)}}
-
-.phone-card::before{
-  content:'';position:absolute;top:0;right:0;
-  width:36px;height:36px;background: #F5B301;
-  clip-path: polygon(100% 0, 0 0, 100% 100%);z-index:3;
-}
-
-.phone-photo{
-  position:relative;width:100%;aspect-ratio: 4/3;
-  overflow:hidden;background: #1a1a1a;
-}
+.phone-card::before{content:'';position:absolute;top:0;right:0;width:36px;height:36px;background: #F5B301;clip-path: polygon(100% 0, 0 0, 100% 100%);z-index:3}
+.phone-photo{position:relative;width:100%;aspect-ratio: 4/3;overflow:hidden;background: #1a1a1a}
 .phone-photo img{width:100%;height:100%;object-fit: cover;object-position: center;display:block}
-.phone-photo::before{
-  content:'';position:absolute;left:16px;bottom:16px;
-  width:28px;height:4px;background:#F5B301;border-radius:2px;z-index:2;
-}
-.phone-photo::after{
-  content:'';position:absolute;left:16px;bottom:24px;
-  width:16px;height:4px;background:#F5B301;border-radius:2px;z-index:2;opacity:.6;
-}
-
-.phone-badge{
-  position:absolute;top:16px;left:16px;z-index:3;
-  padding: 6px 14px;border-radius: 999px;
-  font-size:12px;font-weight:800;color:#0C0C0C;
-  letter-spacing:.3px;background:#F5B301;
-}
+.phone-photo::before{content:'';position:absolute;left:16px;bottom:16px;width:28px;height:4px;background:#F5B301;border-radius:2px;z-index:2}
+.phone-photo::after{content:'';position:absolute;left:16px;bottom:24px;width:16px;height:4px;background:#F5B301;border-radius:2px;z-index:2;opacity:.6}
+.phone-badge{position:absolute;top:16px;left:16px;z-index:3;padding: 6px 14px;border-radius: 999px;font-size:12px;font-weight:800;color:#0C0C0C;letter-spacing:.3px;background:#F5B301}
 .badge-new{background:#F5B301;color:#0C0C0C}
 .badge-used{background:#F5B301;color:#0C0C0C}
 .badge-refurb{background:#F5B301;color:#0C0C0C}
-
 .phone-info{padding: 18px 20px 20px;position:relative}
 .phone-name{font-size:20px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px}
 .phone-spec{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:12px}
@@ -329,19 +189,22 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 .phone-price-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;border-top:1px solid rgba(245,179,1,.12)}
 .phone-price{font-size:28px;font-weight:900;color:#F5B301;line-height:1}
 .phone-price small{font-size:12px;font-weight:700;color:rgba(255,255,255,.4);display:block;margin-top:4px}
-.phone-buy{
-  height:48px;padding: 0 22px;border-radius:14px;border:0;
-  background: #F5B301;color:#0C0C0C;
-  font-family:inherit;font-size:15px;font-weight:800;
-  cursor:pointer;transition: transform .15s ease;
-  -webkit-tap-highlight-color:transparent;
-  display:flex;align-items:center;gap:8px;
-}
+.phone-buy{height:48px;padding: 0 22px;border-radius:14px;border:0;background: #F5B301;color:#0C0C0C;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition: transform .15s ease;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:8px}
 .phone-buy:active{transform:scale(.94)}
 .phone-buy svg{width:18px;height:18px}
-
 .phone-card:nth-child(1){animation-delay:.35s}
 .phone-card:nth-child(2){animation-delay:.45s}
+
+/* СКЛАД — коричнево-оранжевый акцент */
+.warehouse-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding: 60px 20px;opacity:0;transform: translateY(20px);transition: opacity .5s ease .25s, transform .5s ease .25s}
+.app-screen.open .warehouse-empty{opacity:1;transform:translateY(0)}
+.warehouse-empty-icon{width:96px;height:96px;border-radius: 28px;background: rgba(var(--accent-rgb),.08);border: 1.5px solid rgba(var(--accent-rgb),.2);display:grid;place-items:center;margin-bottom: 22px;position: relative;color:var(--accent)}
+.warehouse-empty-icon::before{content:'';position:absolute;top:-6px;right:-6px;width:24px;height:24px;background: var(--accent);clip-path: polygon(100% 0, 0 0, 100% 100%);border-radius: 6px 6px 0 0}
+.warehouse-empty-icon svg{width:52px;height:52px}
+.warehouse-empty-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:8px}
+.warehouse-empty-text{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);line-height:1.5;max-width: 280px}
+.warehouse-empty-hint{margin-top: 24px;font-size: 12.5px;font-weight: 700;color:var(--accent);padding: 10px 18px;border-radius: 12px;background: rgba(var(--accent-rgb),.08);border: 1px solid rgba(var(--accent-rgb),.18);display: inline-flex;align-items:center;gap: 8px}
+.warehouse-empty-hint svg{width:16px;height:16px}
 </style>
 </head>
 <body data-wallpaper="blue" data-theme="dark">
@@ -368,7 +231,7 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
         <span class="app-label">Маркетплейс</span>
       </div>
 
-      <div class="app-item semi-big">
+      <div class="app-item semi-big" id="warehouseBtn">
         <span class="app-icon-wrap">
           <span class="app-icon has-image">
             <img class="icon-img" src="https://i.postimg.cc/59hwhpPW/file-00000000944082108b6468b994f0dc54.png" alt="Warehouse">
@@ -377,7 +240,7 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
         <span class="app-label">Склад</span>
       </div>
 
-      <div class="app-item semi-big">
+      <div class="app-item slightly-smaller">
         <span class="app-icon-wrap">
           <span class="app-icon has-image">
             <img class="icon-img" src="https://i.postimg.cc/SNKJt9hB/file-00000000be8482108e19f7f3de7012ea.png" alt="Phone">
@@ -454,14 +317,45 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
   </div>
 </div>
 
-<!-- затемнение -->
 <div class="desktop-dim" id="desktopDim"></div>
 
-<!-- 🛒 МАРКЕТПЛЕЙС -->
-<div class="market-screen" id="marketScreen">
+<!-- ✨ ПРИВЕТСТВЕННОЕ ОКНО -->
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-box">
+    <div class="welcome-icon">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3h2l2.4 12.6A2 2 0 0 0 9.4 17h18.2a2 2 0 0 0 2-1.6L33 7H6"/>
+        <circle cx="10" cy="42" r="2"/>
+        <circle cx="30" cy="42" r="2"/>
+      </svg>
+    </div>
+    <div class="welcome-title">Добро пожаловать в <span>Маркетплейс</span></div>
+    <div class="welcome-text">Здесь вы сможете покупать телефоны у других продавцов по выгодным ценам</div>
+    <div class="welcome-list">
+      <div class="welcome-list-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Новые и б/у телефоны
+      </div>
+      <div class="welcome-list-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Проверенные продавцы
+      </div>
+      <div class="welcome-list-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Доставка на склад
+      </div>
+    </div>
+    <div class="welcome-buttons">
+      <button class="welcome-btn welcome-btn-cancel" id="welcomeCancel">Отмена</button>
+      <button class="welcome-btn welcome-btn-enter" id="welcomeEnter">Войти</button>
+    </div>
+  </div>
+</div>
 
-  <div class="market-statusbar">
-    <time id="clock2">00:00</time>
+<!-- 🛒 МАРКЕТПЛЕЙС (жёлтый акцент) -->
+<div class="app-screen market-screen" id="marketScreen">
+  <div class="app-statusbar">
+    <time class="clock2">00:00</time>
     <div class="status-right">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 19v-2M8 19v-5M12 19v-8M16 19v-11M20 19V4"/></svg>
       <span class="battery"><i></i></span>
@@ -469,20 +363,19 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
     </div>
   </div>
 
-  <div class="market-header">
-    <button class="market-back" id="marketBack">
+  <div class="app-header">
+    <button class="app-back" data-close="marketScreen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </button>
-    <div class="market-title">
+    <div class="app-title">
       Маркетплейс
       <small>Объявления о продаже телефонов</small>
     </div>
   </div>
 
-  <div class="market-content">
-
+  <div class="app-content">
     <div class="market-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <circle cx="11" cy="11" r="7"/>
@@ -504,7 +397,6 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
     </div>
 
     <div class="market-list">
-
       <div class="phone-card">
         <div class="phone-photo">
           <span class="phone-badge badge-new">Новый</span>
@@ -562,7 +454,56 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
+<!-- 📦 СКЛАД (коричнево-оранжевый акцент) -->
+<div class="app-screen warehouse-screen" id="warehouseScreen">
+  <div class="app-statusbar">
+    <time class="clock2">00:00</time>
+    <div class="status-right">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 19v-2M8 19v-5M12 19v-8M16 19v-11M20 19V4"/></svg>
+      <span class="battery"><i></i></span>
+      <b class="battery-text">84</b>
+    </div>
+  </div>
+
+  <div class="app-header">
+    <button class="app-back" data-close="warehouseScreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <div class="app-title">
+      Склад
+      <small>Твои купленные телефоны</small>
+    </div>
+  </div>
+
+  <div class="app-content">
+    <div class="warehouse-empty">
+      <div class="warehouse-empty-icon">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 18 8 8h32l2 10"/>
+          <path d="M9 22v18h30V22"/>
+          <line x1="18" y1="40" x2="18" y2="30"/>
+          <line x1="30" y1="40" x2="30" y2="30"/>
+          <line x1="18" y1="30" x2="30" y2="30"/>
+        </svg>
+      </div>
+      <div class="warehouse-empty-title">Склад пока пуст</div>
+      <div class="warehouse-empty-text">
+        Здесь будут появляться телефоны, которые ты купишь на маркетплейсе
+      </div>
+      <div class="warehouse-empty-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Купи телефон в Маркетплейсе
+      </div>
     </div>
   </div>
 </div>
@@ -610,16 +551,14 @@ body[data-wallpaper="emerald"]{--wallpaper-bg:linear-gradient(160deg,#0b3b2e 0%,
 <input type="file" id="fileInput" accept="image/*">
 
 <script>
-/* ⏰ Часы */
 function tick(){
   const n = new Date();
   const time = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
   document.getElementById('clock').textContent = time;
-  document.getElementById('clock2').textContent = time;
+  document.querySelectorAll('.clock2').forEach(el => el.textContent = time);
 }
 tick(); setInterval(tick,1000);
 
-/* ⚙️ Настройки */
 const overlay = document.getElementById('settingsOverlay');
 const settingsBtn = document.getElementById('settingsBtn');
 const doneBtn = document.getElementById('settingsDone');
@@ -627,7 +566,6 @@ settingsBtn.addEventListener('click', () => overlay.classList.add('open'));
 doneBtn.addEventListener('click', () => overlay.classList.remove('open'));
 overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 
-/* 🎨 Темы */
 const themeItems = document.querySelectorAll('.theme-item');
 themeItems.forEach(item => {
   item.addEventListener('click', () => {
@@ -637,7 +575,6 @@ themeItems.forEach(item => {
   });
 });
 
-/* 🎨 Обои */
 const wallpaperItems = document.querySelectorAll('.wallpaper-item');
 wallpaperItems.forEach(item => {
   item.addEventListener('click', () => {
@@ -669,52 +606,67 @@ fileInput.addEventListener('change', (e) => {
   fileInput.value = '';
 });
 
-/* 🛒 МАРКЕТПЛЕЙС С КРАСИВОЙ АНИМАЦИЕЙ */
-const marketScreen = document.getElementById('marketScreen');
-const marketBtn = document.getElementById('marketBtn');
-const marketBack = document.getElementById('marketBack');
+/* ✨ АНИМАЦИЯ */
 const desktopDim = document.getElementById('desktopDim');
 
-function openMarket(){
-  // получаем позицию иконки и вычисляем transform-origin
-  const iconRect = marketBtn.querySelector('.app-icon-wrap').getBoundingClientRect();
-  const iconCenterX = iconRect.left + iconRect.width / 2;
-  const iconCenterY = iconRect.top + iconRect.height / 2;
-
-  // transform-origin = где именно "родится" экран (в точке иконки)
-  marketScreen.style.setProperty('--origin-x', iconCenterX + 'px');
-  marketScreen.style.setProperty('--origin-y', iconCenterY + 'px');
-  marketScreen.style.transformOrigin = `${iconCenterX}px ${iconCenterY}px`;
-
-  // запускаем пульс иконки
-  marketBtn.classList.add('opening');
-
-  // показываем затемнение фона
+function openScreen(btn, screen){
+  const iconRect = btn.querySelector('.app-icon-wrap').getBoundingClientRect();
+  const centerX = iconRect.left + iconRect.width / 2;
+  const centerY = iconRect.top + iconRect.height / 2;
+  screen.style.transformOrigin = `${centerX}px ${centerY}px`;
+  btn.classList.add('opening');
   desktopDim.classList.add('show');
-
-  // запускаем открытие
   requestAnimationFrame(() => {
-    marketScreen.classList.remove('closing');
-    marketScreen.classList.add('open');
+    screen.classList.remove('closing');
+    screen.classList.add('open');
   });
-
-  // убираем пульс через 400мс
-  setTimeout(() => marketBtn.classList.remove('opening'), 400);
+  setTimeout(() => btn.classList.remove('opening'), 400);
 }
 
-function closeMarket(){
-  // обратная анимация: экран сжимается к иконке
-  marketScreen.classList.remove('open');
-  marketScreen.classList.add('closing');
+function closeScreen(screen){
+  screen.classList.remove('open');
+  screen.classList.add('closing');
   desktopDim.classList.remove('show');
-
-  setTimeout(() => {
-    marketScreen.classList.remove('closing');
-  }, 500);
+  setTimeout(() => screen.classList.remove('closing'), 500);
 }
 
-marketBtn.addEventListener('click', openMarket);
-marketBack.addEventListener('click', closeMarket);
+/* 🛒 Маркет с приветствием */
+const marketBtn = document.getElementById('marketBtn');
+const marketScreen = document.getElementById('marketScreen');
+const welcomeOverlay = document.getElementById('welcomeOverlay');
+const welcomeEnter = document.getElementById('welcomeEnter');
+const welcomeCancel = document.getElementById('welcomeCancel');
+let marketVisited = false;
+
+marketBtn.addEventListener('click', () => {
+  if (marketVisited) {
+    openScreen(marketBtn, marketScreen);
+  } else {
+    welcomeOverlay.classList.add('open');
+  }
+});
+
+welcomeEnter.addEventListener('click', () => {
+  welcomeOverlay.classList.remove('open');
+  marketVisited = true;
+  setTimeout(() => openScreen(marketBtn, marketScreen), 250);
+});
+
+welcomeCancel.addEventListener('click', () => welcomeOverlay.classList.remove('open'));
+welcomeOverlay.addEventListener('click', (e) => { if (e.target === welcomeOverlay) welcomeOverlay.classList.remove('open'); });
+
+/* 📦 Склад */
+const warehouseBtn = document.getElementById('warehouseBtn');
+const warehouseScreen = document.getElementById('warehouseScreen');
+warehouseBtn.addEventListener('click', () => openScreen(warehouseBtn, warehouseScreen));
+
+/* Кнопки «Назад» */
+document.querySelectorAll('.app-back').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const screen = document.getElementById(btn.dataset.close);
+    if (screen) closeScreen(screen);
+  });
+});
 
 /* Фильтры */
 document.querySelectorAll('.filter-chip').forEach(chip => {
