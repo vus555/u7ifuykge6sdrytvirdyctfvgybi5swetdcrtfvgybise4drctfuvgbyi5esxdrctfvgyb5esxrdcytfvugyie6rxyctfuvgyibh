@@ -58,13 +58,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   overflow:hidden;
   isolation:isolate;
 }
-
-.app-header .deco{
-  position:absolute;
-  border-radius:50%;
-  z-index:0;
-  pointer-events:none;
-}
+.app-header .deco{ position:absolute; border-radius:50%; z-index:0; pointer-events:none; }
 .app-header .d1{width:90px;height:90px;background:rgba(0,0,0,.14);top:-40px;right:10px;}
 .app-header .d2{width:70px;height:70px;background:rgba(0,0,0,.13);bottom:-30px;right:120px;}
 .app-header .d3{width:60px;height:60px;background:rgba(0,0,0,.12);top:-20px;left:-20px;}
@@ -72,26 +66,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .app-header .d5{width:36px;height:36px;background:rgba(0,0,0,.14);top:8px;left:45%;}
 
 .app-back{
-  position:relative;
-  z-index:2;
+  position:relative;z-index:2;
   width:42px;height:42px;flex-shrink:0;border-radius:50%;border:0;
   background:#0C0C0C;color:#fff;display:grid;place-items:center;cursor:pointer;
 }
 .app-back svg{width:22px;height:22px}
 
 .market-search-header{
-  position:relative;
-  flex:1;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  z-index:2;
+  position:relative;flex:1;display:flex;align-items:center;gap:8px;z-index:2;
 }
-.market-search-input-wrap{
-  position:relative;
-  flex:1;
-}
-/* закруглил сильнее — border-radius 24px вместо 16 */
+.market-search-input-wrap{ position:relative; flex:1; }
 .market-search-input-wrap input{
   width:100%;height:48px;border-radius:24px;border:0;
   background:#0C0C0C;color:#fff;font-size:15px;font-weight:600;
@@ -102,114 +86,51 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   position:absolute;left:16px;top:50%;transform:translateY(-50%);
   width:18px;height:18px;color:var(--yellow);
 }
-
-/* кнопки-иконки справа — тоже круглее */
 .icon-btn{
-  width:48px;
-  height:48px;
-  flex-shrink:0;
-  border-radius:24px;
-  border:0;
-  background:#0C0C0C;
-  color:var(--yellow);
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  transition:transform .15s ease, background .2s ease;
-  -webkit-tap-highlight-color:transparent;
+  width:48px;height:48px;flex-shrink:0;border-radius:24px;border:0;
+  background:#0C0C0C;color:var(--yellow);display:grid;place-items:center;
+  cursor:pointer;transition:transform .15s ease; -webkit-tap-highlight-color:transparent;
 }
 .icon-btn:active{ transform:scale(.92); }
 .icon-btn svg{ width:22px; height:22px; }
 
 .dropdown{
-  position:absolute;
-  top:56px;
-  background:#141414;
+  position:absolute;top:56px;background:#141414;
   border:1px solid rgba(var(--yellow-rgb),.2);
-  border-radius:16px;
-  padding:8px;
-  min-width:200px;
-  z-index:50;
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(-6px);
+  border-radius:16px;padding:8px;min-width:200px;z-index:50;
+  opacity:0;visibility:hidden;transform:translateY(-6px);
   transition:opacity .2s ease, visibility .2s ease, transform .2s ease;
   box-shadow:0 10px 30px rgba(0,0,0,.6);
 }
-.dropdown.show{
-  opacity:1;
-  visibility:visible;
-  transform:translateY(0);
-}
+.dropdown.show{ opacity:1; visibility:visible; transform:translateY(0); }
 .dropdown.filter-dd{ right:56px; }
 .dropdown.sort-dd{ right:0; }
-
 .dropdown-title{
-  font-size:11px;
-  font-weight:800;
-  color:rgba(255,255,255,.45);
-  text-transform:uppercase;
-  letter-spacing:.5px;
-  padding:6px 10px;
-  margin-bottom:4px;
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.45);
+  text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;margin-bottom:4px;
 }
 .dropdown-item{
-  display:block;
-  width:100%;
-  text-align:left;
-  padding:10px 12px;
-  border:0;
-  background:transparent;
-  color:#fff;
-  font-family:inherit;
-  font-size:14px;
-  font-weight:600;
-  border-radius:10px;
-  cursor:pointer;
-  transition:background .15s ease;
+  display:block;width:100%;text-align:left;padding:10px 12px;border:0;
+  background:transparent;color:#fff;font-family:inherit;font-size:14px;
+  font-weight:600;border-radius:10px;cursor:pointer;
 }
-.dropdown-item:hover,
 .dropdown-item:active{ background:rgba(var(--yellow-rgb),.15); }
 .dropdown-item.active{ background:var(--yellow); color:#0C0C0C; font-weight:800; }
-
-.price-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 10px 10px;
-}
+.price-row{ display:flex; align-items:center; gap:8px; padding:6px 10px 10px; }
 .price-row input{
-  width:70px;
-  height:36px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.05);
-  color:#fff;
-  font-family:inherit;
-  font-size:13px;
-  font-weight:700;
-  padding:0 10px;
-  outline:none;
-  text-align:center;
+  width:70px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);color:#fff;font-family:inherit;
+  font-size:13px;font-weight:700;padding:0 10px;outline:none;text-align:center;
 }
 .price-row input::placeholder{ color:rgba(255,255,255,.35); }
 .price-row span{ font-size:13px; color:rgba(255,255,255,.5); font-weight:700; }
-
 .price-apply{
-  width:calc(100% - 20px);
-  margin:4px 10px 6px;
-  height:38px;
-  border-radius:10px;
-  border:0;
-  background:var(--yellow);
-  color:#0C0C0C;
-  font-family:inherit;
-  font-size:13px;
-  font-weight:800;
-  cursor:pointer;
+  width:calc(100% - 20px);margin:4px 10px 6px;height:38px;border-radius:10px;border:0;
+  background:var(--yellow);color:#0C0C0C;font-family:inherit;
+  font-size:13px;font-weight:800;cursor:pointer;
 }
 
-.app-content{flex:1;overflow-y:auto;padding:16px 16px 30px}
+.app-content{flex:1;overflow-y:auto;padding:16px 16px 100px}
 .market-list{display:flex;flex-direction:column;gap:20px;padding-top:4px}
 .phone-card{position:relative;background:#141414;border:1px solid rgba(var(--yellow-rgb),.12);border-radius:26px;overflow:hidden}
 .phone-photo{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:#1a1a1a}
@@ -222,6 +143,83 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .phone-price-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;border-top:1px solid rgba(var(--yellow-rgb),.12)}
 .phone-price{font-size:28px;font-weight:900;color:var(--yellow)}
 .phone-buy{height:48px;padding:0 22px;border-radius:14px;border:0;background:var(--yellow);color:#0C0C0C;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}
+
+/* ═══ НИЖНЯЯ ПАНЕЛЬ ═══ */
+.bottom-bar{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 8px;
+  background:var(--yellow);
+  z-index:20;
+  overflow:hidden;
+  isolation:isolate;
+}
+.bottom-bar .deco{ position:absolute; border-radius:50%; z-index:0; pointer-events:none; }
+.bottom-bar .bd1{width:70px;height:70px;background:rgba(0,0,0,.14);top:-30px;left:20px;}
+.bottom-bar .bd2{width:50px;height:50px;background:rgba(0,0,0,.13);bottom:-25px;right:60px;}
+.bottom-bar .bd3{width:40px;height:40px;background:rgba(0,0,0,.12);top:-15px;left:45%;}
+.bottom-bar .bd4{width:60px;height:60px;background:rgba(0,0,0,.13);bottom:-30px;left:120px;}
+
+/* ВСЕ иконки и текст одинаковые — вес 800, размер 22px, цвет одинаковый */
+.bottom-item{
+  position:relative;
+  z-index:2;
+  flex:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  background:transparent;
+  border:0;
+  color:rgba(0,0,0,.55);
+  font-family:inherit;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+  transition:color .15s ease, transform .15s ease;
+  -webkit-tap-highlight-color:transparent;
+  padding:0;
+}
+.bottom-item:active{ transform:scale(.92); }
+.bottom-item.active{ color:#000; }
+.bottom-item svg{
+  width:22px;
+  height:22px;
+  stroke-width:2.2;
+  color:inherit;
+  display:block;
+}
+
+/* центральная кнопка + */
+.bottom-item.center{
+  flex:0 0 62px;
+}
+.bottom-item.center .plus-circle{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background:#000;
+  color:var(--yellow);
+  display:grid;
+  place-items:center;
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
+  transition:transform .15s ease;
+}
+.bottom-item.center:active .plus-circle{ transform:scale(.9); }
+.bottom-item.center .plus-circle svg{
+  width:28px;
+  height:28px;
+  stroke-width:2.6;
+  color:var(--yellow);
+}
 </style>
 </head>
 <body>
@@ -418,6 +416,53 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
       </div>
     </div>
   </div>
+
+  <nav class="bottom-bar">
+    <span class="deco bd1"></span>
+    <span class="deco bd2"></span>
+    <span class="deco bd3"></span>
+    <span class="deco bd4"></span>
+
+    <button class="bottom-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="4" width="7" height="7" rx="1.5"/>
+        <rect x="13" y="4" width="7" height="7" rx="1.5"/>
+        <rect x="4" y="13" width="7" height="7" rx="1.5"/>
+        <rect x="13" y="13" width="7" height="7" rx="1.5"/>
+      </svg>
+      <span>Объявления</span>
+    </button>
+
+    <button class="bottom-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span>Избранное</span>
+    </button>
+
+    <button class="bottom-item center">
+      <span class="plus-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="bottom-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a7.3 7.3 0 0 1-7.7 7.3 8.2 8.2 0 0 1-3.6-.8L3 19.5l1.4-4.1A7 7 0 0 1 3.7 12 7.3 7.3 0 0 1 11.3 4 7.3 7.3 0 0 1 21 11.5z"/>
+      </svg>
+      <span>Сообщения</span>
+    </button>
+
+    <button class="bottom-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21a8 8 0 0 1 16 0"/>
+      </svg>
+      <span>Профиль</span>
+    </button>
+  </nav>
 </div>
 
 <script>
@@ -480,6 +525,14 @@ document.getElementById('priceApply').addEventListener('click',()=>{
   const max = document.getElementById('priceMax').value;
   console.log('Фильтр по цене:', min, '—', max);
   filterDd.classList.remove('show');
+});
+
+/* НИЖНЯЯ ПАНЕЛЬ */
+document.querySelectorAll('.bottom-item:not(.center)').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.bottom-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+  });
 });
 </script>
 </body>
