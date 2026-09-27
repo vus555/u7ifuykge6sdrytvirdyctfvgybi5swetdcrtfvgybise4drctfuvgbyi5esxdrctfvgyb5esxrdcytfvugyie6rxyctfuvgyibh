@@ -1,796 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Пустыня 3D — Онлайн</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100dvh;overflow:hidden;font-family:'Nunito',sans-serif;background:#0a1929;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Небо, фото и вода</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
 
-#lobby{position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#6a4525 0%,#2a1508 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:14px;text-align:center;color:#fff}
-#lobby h1{font-size:32px;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,.5);margin-bottom:8px}
-#lobby h1 span{color:#d4a04a}
-#lobby p{font-size:14px;opacity:.75;max-width:300px;line-height:1.5;margin-bottom:12px}
-#lobby button{width:100%;max-width:300px;padding:16px;border:0;border-radius:16px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;transition:transform .15s}
-#lobby button:active{transform:scale(.96)}
-.btn-solo{background:linear-gradient(160deg,#c89040,#8a6020);color:#2a1508;box-shadow:0 8px 20px rgba(200,144,64,.4)}
-.btn-create{background:#d4a04a;color:#2a1508;box-shadow:0 8px 20px rgba(212,160,74,.4)}
-.btn-join{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)!important}
-#roomCode{display:none;font-size:22px;font-weight:900;color:#d4a04a;background:rgba(0,0,0,.35);padding:14px 24px;border-radius:14px;letter-spacing:3px;border:2px dashed rgba(212,160,74,.6)}
-#joinInput{width:100%;max-width:300px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#fff;font-family:inherit;font-size:16px;font-weight:700;text-align:center;letter-spacing:2px;outline:none;display:none}
-#lobbyStatus{font-size:14px;color:#d4a04a;font-weight:700;min-height:20px}
-.divider{width:100%;max-width:300px;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.4);font-size:12px;font-weight:700;margin:4px 0}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}
+        /* Небо на весь экран */
+        body {
+            background: linear-gradient(
+                to bottom,
+                #1e3c72 0%,
+                #2a5298 25%,
+                #4a90c2 50%,
+                #87ceeb 75%,
+                #c9e8f5 100%
+            );
+        }
 
-#game{position:fixed;inset:0;display:none;touch-action:none}
-#game.active{display:block}
-#three-cv{display:block;width:100%;height:100%;touch-action:none}
+        /* Фото — опущено пониже */
+        .photo {
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            object-fit: contain;
+        }
 
-.hud{position:absolute;top:0;left:0;right:0;z-index:10;padding:14px 16px;display:flex;justify-content:space-between;gap:8px;background:linear-gradient(180deg,rgba(0,0,0,.5),transparent);pointer-events:none}
-.hud-stat{background:rgba(0,0,0,.55);padding:8px 14px;border-radius:14px;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.hud-stat b{color:#d4a04a;font-size:14px}
+        /* Кнопка полноэкранного режима — слева сверху */
+        .fullscreen-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.08);
+        }
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+        }
+        .fullscreen-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
 
-.mode-badge{position:absolute;top:64px;left:50%;transform:translateX(-50%);background:rgba(200,144,64,.85);color:#2a1508;padding:5px 14px;border-radius:999px;font-size:11px;font-weight:800;z-index:10;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+        /* Вода — светлое сверху, тёмное снизу */
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: calc(18% - 2px);
+            background: linear-gradient(
+                to top,
+                rgba(2, 25, 60, 0.85) 0%,      /* тёмное снизу */
+                rgba(5, 55, 105, 0.70) 20%,
+                rgba(10, 95, 150, 0.55) 45%,
+                rgba(30, 150, 190, 0.38) 70%,
+                rgba(120, 210, 230, 0.20) 90%,
+                rgba(220, 245, 255, 0.12) 100% /* светлое сверху */
+            );
+            pointer-events: none;
+        }
 
-.joystick-fixed{position:absolute;bottom:30px;left:30px;width:150px;height:150px;border-radius:50%;border:3px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);z-index:15;touch-action:none;box-shadow:0 4px 20px rgba(0,0,0,.4), inset 0 0 30px rgba(255,255,255,.05)}
-.joystick-fixed::before{content:'';position:absolute;inset:15px;border-radius:50%;border:2px dashed rgba(255,255,255,.15)}
-.joystick-knob{position:absolute;width:65px;height:65px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #e8c880, #b88040);top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(184,128,64,.6);pointer-events:none;transition:transform .05s}
-
-.camera-zone{position:absolute;top:0;right:0;width:50%;height:100%;z-index:14;touch-action:none}
-.joystick-zone{position:absolute;bottom:0;left:0;width:50%;height:50%;z-index:14;touch-action:none}
-
-.jump-btn{position:absolute;bottom:40px;right:40px;width:80px;height:80px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 35%, #d8b070, #8a6020);color:#fff;font-size:34px;cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 20px rgba(138,96,32,.5);transition:transform .1s;-webkit-tap-highlight-color:transparent;z-index:15;touch-action:none}
-.jump-btn:active{transform:scale(.88)}
-
-.hint{position:absolute;bottom:110px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:12px;font-weight:700;background:rgba(0,0,0,.5);padding:8px 16px;border-radius:12px;z-index:9;pointer-events:none;transition:opacity .5s;text-align:center;white-space:nowrap}
-
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(0,0,0,.9);color:#fff;padding:12px 20px;border-radius:14px;font-size:14px;font-weight:700;z-index:90;opacity:0;transition:all .3s;pointer-events:none;border:1px solid rgba(212,160,74,.4);max-width:80vw;text-align:center}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-</style>
+        /* Блики на поверхности воды */
+        .water::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 40% 30% at 25% 8%, rgba(255, 255, 255, 0.22), transparent 70%),
+                radial-gradient(ellipse 30% 20% at 72% 12%, rgba(255, 255, 255, 0.15), transparent 70%),
+                radial-gradient(ellipse 50% 15% at 50% 4%, rgba(255, 255, 255, 0.10), transparent 70%);
+            mix-blend-mode: screen;
+        }
+    </style>
 </head>
 <body>
-
-<div id="lobby">
-  <h1>🏜 <span>ПУСТЫНЯ</span></h1>
-  <p>Огромная пустыня. Иди по барханам, ищи кактусы. Позови друга!</p>
-
-  <button class="btn-solo" id="soloBtn">🎮 Одиночная игра</button>
-
-  <div class="divider">или с другом</div>
-
-  <button class="btn-create" id="createBtn">🏜 Создать пустыню</button>
-  <div id="roomCode"></div>
-  <p id="lobbyStatus"></p>
-
-  <button class="btn-join" id="showJoinBtn">🔗 Присоединиться</button>
-  <input type="text" id="joinInput" placeholder="ВВЕДИ КОД" maxlength="6">
-  <button class="btn-join" id="joinBtn" style="display:none">✅ Войти в пустыню</button>
-</div>
-
-<div id="game">
-  <canvas id="three-cv"></canvas>
-
-  <div class="hud">
-    <div class="hud-stat">👤 <b id="hudName">Ты</b></div>
-    <div class="hud-stat">🎮 <b id="hudStatus">Онлайн</b></div>
-  </div>
-
-  <div class="mode-badge" id="modeBadge" style="display:none">🎮 Одиночная игра</div>
-
-  <div class="joystick-fixed" id="joyFixed">
-    <div class="joystick-knob" id="joyKnob"></div>
-  </div>
-  <div class="joystick-zone" id="joystickZone"></div>
-
-  <div class="camera-zone" id="cameraZone"></div>
-
-  <button class="jump-btn" id="jumpBtn">⬆</button>
-
-  <div class="hint" id="hint">Джойстик — ходить · Тапни экран и веди — камера</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* ═══ КОНФИГ ═══ */
-const WORLD_RADIUS = 300;
-const GRAVITY = 1.6;
-const JUMP_FORCE = 12;
-const MOVE_SPEED = 0.22;
-const PLAYER_RADIUS = 1.2;
-const COLLISION_OBJECTS = [];
-
-/* ═══ СОСТОЯНИЕ ═══ */
-let state = {
-  me: { x: 0, y: 7, z: 0, vx: 0, vz: 0, vy: 0, angle: 0, isMoving: false, onGround: true },
-  friend: null
-};
-
-let cameraAngle = 0;
-let cameraPitch = 0;
-
-let isSolo = false;
-let isHost = false;
-let peer = null, conn = null, roomId = null;
-
-/* ═══ СЕТЬ ═══ */
-const lobby = document.getElementById('lobby');
-const lobbyStatus = document.getElementById('lobbyStatus');
-function genCode(){ return Math.random().toString(36).substring(2,8).toUpperCase(); }
-
-document.getElementById('soloBtn').addEventListener('click',()=>{ isSolo = true; startGame(); });
-
-document.getElementById('createBtn').addEventListener('click',()=>{
-  isHost = true;
-  roomId = genCode();
-  lobbyStatus.textContent = 'Создаём пустыню...';
-  peer = new Peer('desert3d-'+roomId);
-  peer.on('open',()=>{
-    document.getElementById('soloBtn').style.display='none';
-    document.getElementById('createBtn').style.display='none';
-    document.getElementById('showJoinBtn').style.display='none';
-    document.querySelector('.divider').style.display='none';
-    document.getElementById('roomCode').style.display='block';
-    document.getElementById('roomCode').textContent = roomId;
-    lobbyStatus.textContent = 'Ждём друга... Отправь ему код ↑';
-  });
-  peer.on('connection',(c)=>{ conn = c; setupConn(); });
-  peer.on('error',(e)=>{ lobbyStatus.textContent = 'Ошибка: '+e.message; });
-});
-
-document.getElementById('showJoinBtn').addEventListener('click',()=>{
-  document.getElementById('soloBtn').style.display='none';
-  document.getElementById('createBtn').style.display='none';
-  document.getElementById('showJoinBtn').style.display='none';
-  document.querySelector('.divider').style.display='none';
-  document.getElementById('joinInput').style.display='block';
-  document.getElementById('joinBtn').style.display='block';
-});
-
-document.getElementById('joinBtn').addEventListener('click',()=>{
-  const code = document.getElementById('joinInput').value.toUpperCase().trim();
-  if(!code){ lobbyStatus.textContent='Введи код'; return; }
-  lobbyStatus.textContent = 'Подключаемся...';
-  peer = new Peer();
-  peer.on('open',()=>{ conn = peer.connect('desert3d-'+code); setupConn(); });
-  peer.on('error',(e)=>{ lobbyStatus.textContent = 'Ошибка: '+e.message; });
-});
-
-function setupConn(){
-  conn.on('open',()=>{ startGame(); startNetwork(); });
-  conn.on('data',(data)=>{ handleNet(data); });
-  conn.on('close',()=>{ showToast('Соединение потеряно'); });
-}
-
-let lastSent = 0;
-function startNetwork(){
-  setInterval(()=>{
-    if(!conn || !conn.open) return;
-    const now = Date.now();
-    if(now - lastSent > 50){
-      conn.send({ type: 'pos', x: state.me.x, y: state.me.y, z: state.me.z, angle: state.me.angle });
-      lastSent = now;
-    }
-  }, 50);
-}
-
-function handleNet(data){
-  if(data.type === 'pos'){
-    state.friend = { x: data.x, y: data.y, z: data.z || 0, angle: data.angle || 0 };
-  }
-}
-
-/* ═══ THREE.JS ═══ */
-let renderer, scene, camera;
-let sunLight, sunMesh;
-let myChar, friendChar;
-let cacti = [];
-let rocks = [];
-
-function startGame(){
-  lobby.style.display='none';
-  document.getElementById('game').classList.add('active');
-  if(isSolo) document.getElementById('modeBadge').style.display='block';
-
-  initThree();
-  createWorld();
-  createMyCharacter();
-  createFriendCharacter();
-
-  myChar.visible = false;
-
-  state.me.y = duneHeight(0, 0) + 1.7;
-
-  window.addEventListener('resize', resize);
-  resize();
-
-  initControls();
-  gameLoop();
-
-  setTimeout(()=>{
-    const h = document.getElementById('hint');
-    if(h) h.style.opacity = '0';
-  }, 5000);
-}
-
-/* ── Текстура песка ── */
-function createSandTexture(){
-  const c = document.createElement('canvas');
-  c.width = 512; c.height = 512;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#c89858';
-  ctx.fillRect(0,0,512,512);
-  for(let i = 0; i < 40000; i++){
-    const x = Math.random()*512;
-    const y = Math.random()*512;
-    const r = Math.random();
-    if(r > 0.6){
-      ctx.fillStyle = 'rgba(150,110,60,' + (Math.random()*0.4) + ')';
-    } else if(r > 0.3){
-      ctx.fillStyle = 'rgba(220,190,140,' + (Math.random()*0.3) + ')';
-    } else {
-      ctx.fillStyle = 'rgba(180,140,80,' + (Math.random()*0.3) + ')';
-    }
-    ctx.fillRect(x, y, 1, 1);
-  }
-  for(let i = 0; i < 25; i++){
-    ctx.strokeStyle = 'rgba(140,100,50,' + (Math.random()*0.12) + ')';
-    ctx.lineWidth = 1 + Math.random()*3;
-    ctx.beginPath();
-    const y0 = Math.random()*512;
-    ctx.moveTo(0, y0);
-    for(let x = 0; x <= 512; x += 20){
-      ctx.lineTo(x, y0 + Math.sin(x * 0.05 + i) * 8);
-    }
-    ctx.stroke();
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(15, 15);
-  return tex;
-}
-
-function initThree(){
-  const cv = document.getElementById('three-cv');
-  renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setClearColor(0xbfa070);
-  renderer.outputEncoding = THREE.sRGBEncoding;
-
-  scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xc0a878, 200, 900);
-
-  camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 2000);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-  scene.add(new THREE.HemisphereLight(0xd8c0a0, 0xa08050, 0.55));
-
-  sunLight = new THREE.DirectionalLight(0xffe8c0, 0.85);
-  sunLight.position.set(200, 400, 150);
-  sunLight.castShadow = true;
-  sunLight.shadow.mapSize.width = 2048;
-  sunLight.shadow.mapSize.height = 2048;
-  sunLight.shadow.camera.left = -350;
-  sunLight.shadow.camera.right = 350;
-  sunLight.shadow.camera.top = 350;
-  sunLight.shadow.camera.bottom = -350;
-  sunLight.shadow.camera.near = 1;
-  sunLight.shadow.camera.far = 1200;
-  sunLight.shadow.bias = -0.001;
-  scene.add(sunLight);
-
-  const sunMat = new THREE.MeshBasicMaterial({ color: 0xf0d8a8 });
-  sunMesh = new THREE.Mesh(new THREE.SphereGeometry(20, 24, 24), sunMat);
-  sunMesh.position.set(500, 700, 350);
-  scene.add(sunMesh);
-
-  const glowMat = new THREE.MeshBasicMaterial({ color: 0xe8c880, transparent: true, opacity: 0.2 });
-  const glow = new THREE.Mesh(new THREE.SphereGeometry(55, 24, 24), glowMat);
-  glow.position.copy(sunMesh.position);
-  scene.add(glow);
-}
-
-function resize(){
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-}
-
-function duneHeight(x, z){
-  const w1 = Math.sin(x * 0.015) * Math.cos(z * 0.012) * 6;
-  const w2 = Math.sin(x * 0.028 + 1.2) * Math.cos(z * 0.032 + 0.5) * 3;
-  const w3 = Math.sin(x * 0.055 + 3) * Math.cos(z * 0.048 + 2) * 1.5;
-  const w4 = Math.sin(x * 0.08) * Math.cos(z * 0.09) * 0.6;
-  return w1 + w2 + w3 + w4;
-}
-
-function createWorld(){
-  const segs = 200;
-  const size = 1200;
-  const sandGeo = new THREE.PlaneGeometry(size, size, segs, segs);
-  const sandPos = sandGeo.attributes.position;
-  for(let i = 0; i < sandPos.count; i++){
-    const x = sandPos.getX(i);
-    const z = -sandPos.getY(i);
-    sandPos.setZ(i, duneHeight(x, z));
-  }
-  sandGeo.computeVertexNormals();
-
-  const sand = new THREE.Mesh(sandGeo, new THREE.MeshLambertMaterial({ map: createSandTexture() }));
-  sand.rotation.x = -Math.PI / 2;
-  sand.position.y = 0;
-  sand.receiveShadow = true;
-  scene.add(sand);
-
-  for(let i = 0; i < 50; i++){
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 40 + Math.random() * (WORLD_RADIUS * 0.9 - 40);
-    const x = Math.cos(angle) * dist;
-    const z = Math.sin(angle) * dist;
-    const cactus = createCactus();
-    const y = duneHeight(x, z);
-    cactus.position.set(x, y, z);
-    cactus.rotation.y = Math.random() * Math.PI * 2;
-    scene.add(cactus);
-    cacti.push(cactus);
-    COLLISION_OBJECTS.push({ x, z, r: 1.5 });
-  }
-
-  const stoneMat = new THREE.MeshLambertMaterial({ color: 0xa88868 });
-  for(let i = 0; i < 70; i++){
-    const sizeR = 1.2 + Math.random() * 3;
-    const stone = new THREE.Mesh(new THREE.DodecahedronGeometry(sizeR, 0), stoneMat);
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 20 + Math.random() * (WORLD_RADIUS * 0.85 - 20);
-    const x = Math.cos(angle) * dist;
-    const z = Math.sin(angle) * dist;
-    stone.position.set(x, duneHeight(x, z) + sizeR * 0.4, z);
-    stone.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-    stone.castShadow = true;
-    stone.receiveShadow = true;
-    scene.add(stone);
-    rocks.push(stone);
-    COLLISION_OBJECTS.push({ x, z, r: sizeR * 0.7 });
-  }
-
-  const bushMat = new THREE.MeshLambertMaterial({ color: 0x7a6238 });
-  for(let i = 0; i < 120; i++){
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 30 + Math.random() * (WORLD_RADIUS * 0.9 - 30);
-    const x = Math.cos(angle) * dist;
-    const z = Math.sin(angle) * dist;
-    const y = duneHeight(x, z) + 0.8;
-    const bush = new THREE.Mesh(new THREE.SphereGeometry(0.8 + Math.random()*0.5, 6, 5), bushMat);
-    bush.position.set(x, y, z);
-    bush.scale.set(1, 0.6, 1);
-    bush.castShadow = true;
-    scene.add(bush);
-  }
-}
-
-function createCactus(){
-  const cactus = new THREE.Group();
-  const mat = new THREE.MeshLambertMaterial({ color: 0x35662e });
-  const matDark = new THREE.MeshLambertMaterial({ color: 0x254a20 });
-
-  const height = 4 + Math.random() * 3;
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.7, height, 12), mat);
-  trunk.position.y = height / 2;
-  trunk.castShadow = true;
-  cactus.add(trunk);
-
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 8, 0, Math.PI*2, 0, Math.PI/2), mat);
-  cap.position.y = height;
-  cap.castShadow = true;
-  cactus.add(cap);
-
-  const armsCount = Math.floor(Math.random() * 3) + 1;
-  for(let i = 0; i < armsCount; i++){
-    const side = i % 2 === 0 ? 1 : -1;
-    const armY = height * (0.4 + Math.random() * 0.4);
-    const armH = 1.5 + Math.random() * 1.5;
-
-    const armHoriz = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.3, 10), matDark);
-    armHoriz.rotation.z = Math.PI / 2;
-    armHoriz.position.set(side * 0.9, armY, 0);
-    armHoriz.castShadow = true;
-    cactus.add(armHoriz);
-
-    const armVert = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, armH, 10), matDark);
-    armVert.position.set(side * 1.5, armY + armH / 2, 0);
-    armVert.castShadow = true;
-    cactus.add(armVert);
-
-    const armCap = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8, 0, Math.PI*2, 0, Math.PI/2), matDark);
-    armCap.position.set(side * 1.5, armY + armH, 0);
-    armCap.castShadow = true;
-    cactus.add(armCap);
-  }
-  return cactus;
-}
-
-function createHumanoid(color){
-  const group = new THREE.Group();
-  const mat = new THREE.MeshLambertMaterial({ color });
-  const darkMat = new THREE.MeshLambertMaterial({ color: darkenColor(color, 0.7) });
-
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.75, 20, 20), mat);
-  head.position.y = 4.4; head.castShadow = true; group.add(head);
-
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.4, 10), mat);
-  neck.position.y = 3.65; neck.castShadow = true; group.add(neck);
-
-  const chest = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.7, 1.5, 14), mat);
-  chest.position.y = 2.85; chest.castShadow = true; group.add(chest);
-
-  const waist = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.75, 0.7, 14), mat);
-  waist.position.y = 1.75; waist.castShadow = true; group.add(waist);
-
-  function createArm(side){
-    const g = new THREE.Group();
-    const u = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1.3, 10), mat);
-    u.position.y = -0.65; u.castShadow = true; g.add(u);
-    const l = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.18, 1.2, 10), darkMat);
-    l.position.y = -1.9; l.castShadow = true; g.add(l);
-    const h = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), darkMat);
-    h.position.y = -2.6; h.castShadow = true; g.add(h);
-    g.position.set(side * 0.9, 3.5, 0);
-    return g;
-  }
-  const armL = createArm(-1), armR = createArm(1);
-  group.add(armL); group.add(armR);
-
-  function createLeg(side){
-    const g = new THREE.Group();
-    const t = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.26, 1.4, 10), mat);
-    t.position.y = -0.7; t.castShadow = true; g.add(t);
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 1.3, 10), darkMat);
-    s.position.y = -2.05; s.castShadow = true; g.add(s);
-    const f = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.8), darkMat);
-    f.position.set(0, -2.85, 0.15); f.castShadow = true; g.add(f);
-    g.position.set(side * 0.35, 1.4, 0);
-    return g;
-  }
-  const legL = createLeg(-1), legR = createLeg(1);
-  group.add(legL); group.add(legR);
-
-  const eyeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  const eyeGeo = new THREE.SphereGeometry(0.11, 10, 10);
-  const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-  eyeL.position.set(-0.25, 4.5, 0.65); group.add(eyeL);
-  const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
-  eyeR.position.set(0.25, 4.5, 0.65); group.add(eyeR);
-
-  group.userData = { arms: { L: armL, R: armR }, legs: { L: legL, R: legR }, head, walkTime: 0 };
-  return group;
-}
-
-function darkenColor(hex, factor){
-  const r = ((hex >> 16) & 255) * factor;
-  const g = ((hex >> 8) & 255) * factor;
-  const b = (hex & 255) * factor;
-  return (Math.floor(r) << 16) | (Math.floor(g) << 8) | Math.floor(b);
-}
-
-function createMyCharacter(){
-  myChar = createHumanoid(0x999999);
-  scene.add(myChar);
-}
-
-function createFriendCharacter(){
-  friendChar = createHumanoid(0xb0b0b0);
-  friendChar.visible = false;
-  scene.add(friendChar);
-}
-
-function checkCollision(newX, newZ){
-  for(const obj of COLLISION_OBJECTS){
-    const dx = newX - obj.x;
-    const dz = newZ - obj.z;
-    const dist = Math.hypot(dx, dz);
-    const minDist = obj.r + PLAYER_RADIUS;
-    if(dist < minDist){
-      if(dist < 0.001) return { x: obj.x, z: obj.z + minDist };
-      const angle = Math.atan2(dz, dx);
-      return { x: obj.x + Math.cos(angle) * minDist, z: obj.z + Math.sin(angle) * minDist };
-    }
-  }
-  return null;
-}
-
-/* ═══ УПРАВЛЕНИЕ ═══ */
-let keys = {};
-let joyActive = false;
-let joyTouchId = null;
-let joyCenterX = 0, joyCenterY = 0;
-let joyCurX = 0, joyCurY = 0;
-let joyMaxDist = 50;
-
-/* Камера — ЛКМ зажать и водить */
-let camMouseDown = false;
-let camMouseLastX = 0, camMouseLastY = 0;
-
-/* Камера — тач */
-let camActive = false;
-let camTouchId = null;
-let camLastX = 0, camLastY = 0;
-
-function initControls(){
-  document.addEventListener('keydown', (e) => {
-    const k = e.key.toLowerCase();
-    keys[k] = true;
-    if(e.code === 'Space'){ e.preventDefault(); doJump(); }
-  });
-  document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
-
-  /* ═══ КАМЕРА НА ЛКМ (ПК) ═══ */
-  const cv = document.getElementById('three-cv');
-  cv.addEventListener('mousedown', (e) => {
-    /* Любая кнопка мыши — зажать и водить */
-    camMouseDown = true;
-    camMouseLastX = e.clientX;
-    camMouseLastY = e.clientY;
-    e.preventDefault();
-  });
-  window.addEventListener('mousemove', (e) => {
-    if(camMouseDown){
-      const dx = e.clientX - camMouseLastX;
-      const dy = e.clientY - camMouseLastY;
-      cameraAngle -= dx * 0.006;
-      cameraPitch = Math.max(-0.8, Math.min(0.8, cameraPitch - dy * 0.004));
-      camMouseLastX = e.clientX;
-      camMouseLastY = e.clientY;
-    }
-  });
-  window.addEventListener('mouseup', () => { camMouseDown = false; });
-  cv.addEventListener('contextmenu', (e) => e.preventDefault());
-
-  /* ═══ ПРЫЖОК ═══ */
-  document.getElementById('jumpBtn').addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    doJump();
-  }, { passive: false });
-  document.getElementById('jumpBtn').addEventListener('click', (e) => {
-    if(!('ontouchstart' in window)) doJump();
-  });
-
-  /* ═══ ДЖОЙСТИК ═══ */
-  const joyZone = document.getElementById('joystickZone');
-  const knob = document.getElementById('joyKnob');
-
-  joyZone.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const t = e.changedTouches[0];
-    joyActive = true;
-    joyTouchId = t.identifier;
-    const joyEl = document.getElementById('joyFixed');
-    const rect = joyEl.getBoundingClientRect();
-    joyCenterX = rect.left + rect.width / 2;
-    joyCenterY = rect.top + rect.height / 2;
-    joyCurX = t.clientX;
-    joyCurY = t.clientY;
-  }, { passive: false });
-
-  joyZone.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if(!joyActive) return;
-    const t = Array.from(e.changedTouches).find(x => x.identifier === joyTouchId);
-    if(!t) return;
-    joyCurX = t.clientX;
-    joyCurY = t.clientY;
-
-    let dx = joyCurX - joyCenterX;
-    let dy = joyCurY - joyCenterY;
-    const dist = Math.hypot(dx, dy);
-    if(dist > joyMaxDist){
-      dx = dx / dist * joyMaxDist;
-      dy = dy / dist * joyMaxDist;
-    }
-    knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-  }, { passive: false });
-
-  const endJoy = () => {
-    if(!joyActive) return;
-    joyActive = false;
-    joyTouchId = null;
-    knob.style.transform = 'translate(-50%,-50%)';
-  };
-  joyZone.addEventListener('touchend', endJoy);
-  joyZone.addEventListener('touchcancel', endJoy);
-
-  /* ═══ КАМЕРА НА ТАЧ (правая половина) ═══ */
-  const camZone = document.getElementById('cameraZone');
-  camZone.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const t = e.changedTouches[0];
-    camActive = true;
-    camTouchId = t.identifier;
-    camLastX = t.clientX;
-    camLastY = t.clientY;
-  }, { passive: false });
-
-  camZone.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if(!camActive) return;
-    const t = Array.from(e.changedTouches).find(x => x.identifier === camTouchId);
-    if(!t) return;
-    const dx = t.clientX - camLastX;
-    const dy = t.clientY - camLastY;
-    cameraAngle -= dx * 0.006;
-    cameraPitch = Math.max(-0.8, Math.min(0.8, cameraPitch - dy * 0.004));
-    camLastX = t.clientX;
-    camLastY = t.clientY;
-  }, { passive: false });
-
-  const endCam = () => { camActive = false; camTouchId = null; };
-  camZone.addEventListener('touchend', endCam);
-  camZone.addEventListener('touchcancel', endCam);
-}
-
-function doJump(){
-  if(state.me.onGround){
-    state.me.vy = JUMP_FORCE;
-    state.me.onGround = false;
-  }
-}
-
-/* ═══ ЦИКЛ ═══ */
-let lastTime = performance.now();
-
-function gameLoop(){
-  const now = performance.now();
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-  update(dt);
-  render();
-  requestAnimationFrame(gameLoop);
-}
-
-function update(dt){
-  let mx = 0, mz = 0;
-
-  if(keys['w'] || keys['ц'] || keys['arrowup']) mz -= 1;
-  if(keys['s'] || keys['ы'] || keys['arrowdown']) mz += 1;
-  if(keys['a'] || keys['ф'] || keys['arrowleft']) mx -= 1;
-  if(keys['d'] || keys['в'] || keys['arrowright']) mx += 1;
-
-  if(joyActive){
-    const jdx = joyCurX - joyCenterX;
-    const jdy = joyCurY - joyCenterY;
-    const dist = Math.hypot(jdx, jdy);
-    if(dist > 8){
-      const camDirX = Math.sin(cameraAngle);
-      const camDirZ = Math.cos(cameraAngle);
-      const forward = -jdy / joyMaxDist;
-      const right = jdx / joyMaxDist;
-      mx += camDirX * forward + camDirZ * right;
-      mz += camDirZ * forward - camDirX * right;
-    }
-  } else if(mx !== 0 || mz !== 0){
-    const camDirX = Math.sin(cameraAngle);
-    const camDirZ = Math.cos(cameraAngle);
-    const newMx = camDirX * (-mz) + camDirZ * mx;
-    const newMz = camDirZ * (-mz) - camDirX * mx;
-    mx = newMx; mz = newMz;
-  }
-
-  const len = Math.hypot(mx, mz);
-  if(len > 1){ mx /= len; mz /= len; }
-
-  state.me.vx = (state.me.vx || 0) * 0.82 + mx * MOVE_SPEED;
-  state.me.vz = (state.me.vz || 0) * 0.82 + mz * MOVE_SPEED;
-
-  let newX = state.me.x + state.me.vx;
-  let newZ = state.me.z + state.me.vz;
-
-  const distFromCenter = Math.hypot(newX, newZ);
-  const maxDist = WORLD_RADIUS - 8;
-  if(distFromCenter > maxDist){
-    const angle = Math.atan2(newZ, newX);
-    newX = Math.cos(angle) * maxDist;
-    newZ = Math.sin(angle) * maxDist;
-    state.me.vx *= 0.5;
-    state.me.vz *= 0.5;
-  }
-
-  const collision = checkCollision(newX, newZ);
-  if(collision){
-    newX = collision.x;
-    newZ = collision.z;
-    state.me.vx *= 0.3;
-    state.me.vz *= 0.3;
-  }
-
-  state.me.x = newX;
-  state.me.z = newZ;
-
-  state.me.y += state.me.vy;
-  state.me.vy -= GRAVITY;
-
-  const groundY = duneHeight(state.me.x, state.me.z) + 1.7;
-
-  if(state.me.y <= groundY){
-    state.me.y = groundY;
-    state.me.vy = 0;
-    state.me.onGround = true;
-  } else {
-    state.me.onGround = false;
-  }
-
-  const speed = Math.hypot(state.me.vx, state.me.vz);
-  if(speed > 0.02){
-    const targetAngle = Math.atan2(state.me.vx, state.me.vz);
-    let diff = targetAngle - state.me.angle;
-    while(diff > Math.PI) diff -= Math.PI * 2;
-    while(diff < -Math.PI) diff += Math.PI * 2;
-    state.me.angle += diff * 0.25;
-    state.me.isMoving = true;
-  } else {
-    state.me.isMoving = false;
-  }
-}
-
-function render(){
-  const time = performance.now() / 1000;
-
-  if(sunMesh){
-    const s = 1 + Math.sin(time * 0.8) * 0.05;
-    sunMesh.scale.set(s, s, s);
-  }
-
-  myChar.visible = false;
-
-  if(friendChar){
-    if(state.friend){
-      friendChar.visible = true;
-      friendChar.position.x += (state.friend.x - friendChar.position.x) * 0.3;
-      friendChar.position.y += (state.friend.y - friendChar.position.y) * 0.3;
-      friendChar.position.z += (state.friend.z - friendChar.position.z) * 0.3;
-      let diff = state.friend.angle - friendChar.rotation.y;
-      while(diff > Math.PI) diff -= Math.PI * 2;
-      while(diff < -Math.PI) diff += Math.PI * 2;
-      friendChar.rotation.y += diff * 0.2;
-    } else {
-      friendChar.visible = false;
-    }
-  }
-
-  cacti.forEach(cactus => {
-    cactus.rotation.z = Math.sin(time * 0.5 + cactus.position.x) * 0.02;
-  });
-
-  /* === КАМЕРА ОТ ПЕРВОГО ЛИЦА === */
-  const camY = state.me.y;
-
-  const lookX = state.me.x + Math.sin(cameraAngle) * Math.cos(cameraPitch) * 10;
-  const lookZ = state.me.z + Math.cos(cameraAngle) * Math.cos(cameraPitch) * 10;
-  const lookY = camY + Math.sin(cameraPitch) * 10;
-
-  camera.position.x += (state.me.x - camera.position.x) * 0.4;
-  camera.position.y += (camY - camera.position.y) * 0.4;
-  camera.position.z += (state.me.z - camera.position.z) * 0.4;
-
-  camera.lookAt(lookX, lookY, lookZ);
-
-  renderer.render(scene, camera);
-}
-
-let toastTimer = null;
-function showToast(text){
-  const t = document.getElementById('toast');
-  t.textContent = text;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
-}
-</script>
+    <!-- Кнопка полного экрана -->
+    <button class="fullscreen-btn" id="fsBtn" title="Полноэкранный режим">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+    </button>
+
+    <!-- Фото -->
+    <img class="photo" src="https://i.postimg.cc/XJPmBD2T/file-000000005ff882108b3db3ff21659a57.png" alt="Фото">
+
+    <!-- Вода -->
+    <div class="water"></div>
+
+    <script>
+        const fsBtn = document.getElementById('fsBtn');
+
+        fsBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fsBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                    </svg>`;
+                fsBtn.title = 'Выйти из полноэкранного режима';
+            } else {
+                fsBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                    </svg>`;
+                fsBtn.title = 'Полноэкранный режим';
+            }
+        });
+    </script>
 </body>
 </html>
