@@ -1,4 +1,4 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -12,7 +12,7 @@
     height: 100%;
     height: 100dvh; 
     overflow: hidden;
-    background: #000; /* Черные рамки */
+    background: #000; /* Черный фон для рамок */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,14 +37,14 @@
     pointer-events: none; 
   }
 
-  /* Касса */
+  /* --- КАССА --- */
   .cashier-wrapper {
     position: absolute;
     left: 1.18%;
     top: 49.87%;
     width: 36.52%;
     height: auto;
-    pointer-events: none; /* Клик проходит сквозь кассу на фон */
+    pointer-events: none; 
   }
 
   .overlay-photo {
@@ -57,10 +57,8 @@
 <body>
 
   <div id="game-container">
-    <!-- Твой фон с белым окном -->
     <img src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png" class="bg-image" alt="Магазин">
     
-    <!-- Касса -->
     <div class="cashier-wrapper">
       <img src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png" class="overlay-photo" alt="Каса">
     </div>
@@ -69,11 +67,17 @@
 <script>
   const container = document.getElementById('game-container');
 
-  // Масштабирование: заполняет ровно по ширине, оставляя рамки сверху и снизу
   function resizeGame() {
     const windowWidth = window.innerWidth;
     const gameWidth = 1185;
+
+    // МАГИЯ ЗДЕСЬ: 
+    // Мы берем ширину экрана и делим на ширину картинки.
+    // Это заставляет игру ВСЕГДА заполнять экран по ширине (от края до края).
+    // На телефоне это уберет черные полосы по бокам.
+    // На ноутбуке это тоже растянет по ширине, а высота подстроится сама (без сплющивания).
     const scale = windowWidth / gameWidth;
+    
     container.style.transform = `scale(${scale})`;
   }
 
@@ -81,7 +85,7 @@
   window.addEventListener('resize', resizeGame);
   window.addEventListener('orientationchange', resizeGame);
 
-  // Фуллскрин по клику
+  // --- ПОЛНОЭКРАННЫЙ РЕЖИМ ---
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       const el = document.documentElement;
