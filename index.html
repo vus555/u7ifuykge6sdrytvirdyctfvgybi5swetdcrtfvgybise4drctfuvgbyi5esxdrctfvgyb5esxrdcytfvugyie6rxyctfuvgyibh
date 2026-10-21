@@ -2,8 +2,8 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Скріншот</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Гра - Магазин</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -12,63 +12,75 @@
     height: 100%;
     overflow: hidden;
     background: #000;
+    /* Центруємо гру по центру екрану */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Контейнер, який входить у fullscreen */
-  .stage {
+  /* 
+   * ІГРОВА СЦЕНА
+   * Вона має фіксовані пропорції твого фону (1185 / 835).
+   * Завдяки цьому вона ніколи не розтягнеться.
+   */
+  .game-scene {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    aspect-ratio: 1185 / 835; 
+    /* Робимо так, щоб сцена завжди вписувалась в екран (і на телефоні, і на ноуті) */
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    /* Ця магія змушує її вписуватись без спотворень */
+    max-width: calc(100vh * (1185 / 835));
     cursor: zoom-in;
-    overflow: hidden;
   }
 
-  .stage:fullscreen {
+  .game-scene:fullscreen {
     cursor: zoom-out;
-  }
-
-  /* Основне фото — завжди на весь екран */
-  .photo {
+    /* У фулскріні сцена просто займає максимум місця, зберігаючи пропорції */
+    max-width: 100vw;
+    max-height: 100vh;
     width: 100%;
     height: 100%;
-    object-fit: fill;
-    display: block;
+    aspect-ratio: 1185 / 835; 
   }
 
-  /* Друге фото — у звичайному режимі стоїть у своєму місці */
+  /* Фонове зображення */
+  .bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: fill; /* fill безпечний, бо контейнер вже має правильні пропорції */
+    display: block;
+    pointer-events: none; /* Щоб клік йшов на сцену */
+  }
+
+  /* Каса (твої ідеальні координати) */
   .overlay-photo {
     position: absolute;
-    left: 1.72%;
-    top: 44.74%;
-    width: 29.80%;
-    height: 33.33%;
+    left: 1.18%;
+    top: 49.87%;
+    width: 36.52%;
+    height: auto;
+    pointer-events: none; /* Щоб клік проходив крізь неї */
     display: block;
-    object-fit: contain;
-    cursor: zoom-in;
-  }
-
-  /* У FULLSCREEN — друге фото теж розтягується на весь екран, як перше */
-  .stage:fullscreen .overlay-photo {
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
   }
 </style>
 </head>
 <body>
 
-  <div class="stage" onclick="toggleFullscreen(this)">
-    <img
-      src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png"
-      alt="Скріншот"
-      class="photo"
+  <!-- Ігрова сцена -->
+  <div class="game-scene" onclick="toggleFullscreen(this)">
+    <!-- Фон -->
+    <img 
+      src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png" 
+      class="bg-image" 
+      alt="Магазин"
     >
-    <img
-      src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png"
-      alt="Поверх"
-      class="overlay-photo"
+    <!-- Каса поверх -->
+    <img 
+      src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png" 
+      class="overlay-photo" 
+      alt="Каса"
     >
   </div>
 
@@ -80,6 +92,8 @@
         else if (el.msRequestFullscreen) el.msRequestFullscreen();
       } else {
         if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
       }
     }
   </script>
