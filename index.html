@@ -12,7 +12,7 @@
     height: 100%;
     height: 100dvh; 
     overflow: hidden;
-    background: #000; /* Черный фон для рамок */
+    background: #000; /* Черные рамки */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,16 +67,24 @@
 <script>
   const container = document.getElementById('game-container');
 
+  // УМНОЕ МАСШТАБИРОВАНИЕ
   function resizeGame() {
     const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    // Оригинальные размеры игры
     const gameWidth = 1185;
+    const gameHeight = 835;
 
-    // МАГИЯ ЗДЕСЬ: 
-    // Мы берем ширину экрана и делим на ширину картинки.
-    // Это заставляет игру ВСЕГДА заполнять экран по ширине (от края до края).
-    // На телефоне это уберет черные полосы по бокам.
-    // На ноутбуке это тоже растянет по ширине, а высота подстроится сама (без сплющивания).
-    const scale = windowWidth / gameWidth;
+    // Считаем масштаб для ширины и для высоты
+    const scaleX = windowWidth / gameWidth;
+    const scaleY = windowHeight / gameHeight;
+
+    // МАГИЯ: Math.min выбирает НАИМЕНЬШИЙ масштаб.
+    // Это значит, что игра ВСЕГДА будет вписываться целиком.
+    // На широком ноутбуке она упрется в высоту (появятся рамки по бокам).
+    // На узком телефоне она упрется в ширину (появятся рамки сверху и снизу).
+    const scale = Math.min(scaleX, scaleY);
     
     container.style.transform = `scale(${scale})`;
   }
