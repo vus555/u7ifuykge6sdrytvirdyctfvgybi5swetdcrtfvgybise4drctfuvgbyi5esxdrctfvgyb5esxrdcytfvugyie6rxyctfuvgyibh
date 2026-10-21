@@ -14,7 +14,7 @@
     background: #000;
   }
 
-  /* Контейнер, який входить у fullscreen — містить обидва фото */
+  /* Контейнер, який входить у fullscreen */
   .stage {
     position: relative;
     width: 100vw;
@@ -27,6 +27,7 @@
     cursor: zoom-out;
   }
 
+  /* Основне фото — завжди на весь екран */
   .photo {
     width: 100%;
     height: 100%;
@@ -34,21 +35,30 @@
     display: block;
   }
 
+  /* Друге фото — у звичайному режимі стоїть у своєму місці */
   .overlay-photo {
     position: absolute;
-    left: 0.00%;
-    top: 55.32%;
-    width: 33.86%;
-    height: 21.29%;
-    pointer-events: none;
+    left: 1.72%;
+    top: 44.74%;
+    width: 29.80%;
+    height: 33.33%;
     display: block;
     object-fit: contain;
+    cursor: zoom-in;
+  }
+
+  /* У FULLSCREEN — друге фото теж розтягується на весь екран, як перше */
+  .stage:fullscreen .overlay-photo {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
   }
 </style>
 </head>
 <body>
 
-  <!-- Обидва фото всередині одного контейнера -->
   <div class="stage" onclick="toggleFullscreen(this)">
     <img
       src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png"
