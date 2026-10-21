@@ -14,23 +14,53 @@
     background: #000;
   }
 
-  .photo {
+  /* Контейнер, який входить у fullscreen — містить обидва фото */
+  .stage {
+    position: relative;
     width: 100vw;
     height: 100vh;
-    object-fit: fill;   /* розтягує на весь екран, навіть якщо пропорції зміняться */
-    display: block;
     cursor: zoom-in;
+    overflow: hidden;
+  }
+
+  .stage:fullscreen {
+    cursor: zoom-out;
+  }
+
+  .photo {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+  }
+
+  .overlay-photo {
+    position: absolute;
+    left: 0.00%;
+    top: 55.32%;
+    width: 33.86%;
+    height: 21.29%;
+    pointer-events: none;
+    display: block;
+    object-fit: contain;
   }
 </style>
 </head>
 <body>
 
-  <img
-    src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png"
-    alt="Скріншот"
-    class="photo"
-    onclick="toggleFullscreen(this)"
-  >
+  <!-- Обидва фото всередині одного контейнера -->
+  <div class="stage" onclick="toggleFullscreen(this)">
+    <img
+      src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png"
+      alt="Скріншот"
+      class="photo"
+    >
+    <img
+      src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png"
+      alt="Поверх"
+      class="overlay-photo"
+    >
+  </div>
 
   <script>
     function toggleFullscreen(el) {
