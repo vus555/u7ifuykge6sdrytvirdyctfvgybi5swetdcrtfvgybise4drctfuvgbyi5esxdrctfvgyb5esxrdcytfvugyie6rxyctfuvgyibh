@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -12,13 +12,13 @@
     height: 100%;
     height: 100dvh; 
     overflow: hidden;
-    background: #000; /* Черный фон для рамок */
+    background: #000; /* Черные рамки */
     display: flex;
     align-items: center;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    cursor: pointer; /* Показываем, что можно кликнуть */
+    cursor: pointer;
   }
 
   #game-container {
@@ -37,14 +37,14 @@
     pointer-events: none; 
   }
 
-  /* --- КАССА --- */
+  /* Касса */
   .cashier-wrapper {
     position: absolute;
     left: 1.18%;
     top: 49.87%;
     width: 36.52%;
     height: auto;
-    pointer-events: none; /* Чтобы клик проходил сквозь кассу на фон */
+    pointer-events: none; /* Клик проходит сквозь кассу на фон */
   }
 
   .overlay-photo {
@@ -57,7 +57,7 @@
 <body>
 
   <div id="game-container">
-    <!-- Фон -->
+    <!-- Твой фон с белым окном -->
     <img src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png" class="bg-image" alt="Магазин">
     
     <!-- Касса -->
@@ -69,7 +69,7 @@
 <script>
   const container = document.getElementById('game-container');
 
-  // Масштабирование (заполняет ширину, оставляя рамки сверху и снизу)
+  // Масштабирование: заполняет ровно по ширине, оставляя рамки сверху и снизу
   function resizeGame() {
     const windowWidth = window.innerWidth;
     const gameWidth = 1185;
@@ -81,32 +81,21 @@
   window.addEventListener('resize', resizeGame);
   window.addEventListener('orientationchange', resizeGame);
 
-  // --- ПОЛНОЭКРАННЫЙ РЕЖИМ ПО КЛИКУ ---
+  // Фуллскрин по клику
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       const el = document.documentElement;
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(err => console.log(err));
-      } else if (el.webkitRequestFullscreen) { /* Safari */
-        el.webkitRequestFullscreen();
-      } else if (el.msRequestFullscreen) { /* IE11 */
-        el.msRequestFullscreen();
-      }
+      if (el.requestFullscreen) el.requestFullscreen().catch(err => console.log(err));
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
     }
   }
 
-  // Вешаем клик на весь документ
   document.addEventListener('click', toggleFullscreen);
-  
-  // Для телефонов
   document.addEventListener('touchstart', (e) => {
     if(e.cancelable) e.preventDefault(); 
     toggleFullscreen();
