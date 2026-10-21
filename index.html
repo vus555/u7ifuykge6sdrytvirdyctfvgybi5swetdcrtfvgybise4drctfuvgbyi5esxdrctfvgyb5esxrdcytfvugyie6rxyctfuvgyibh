@@ -12,12 +12,17 @@
     height: 100%;
     overflow: hidden;
     background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .photo {
     width: 100vw;
-    height: 100vh;
-    object-fit: fill;   /* розтягує на весь екран, навіть якщо пропорції зміняться */
+    /* МАГИЯ: Запрещаем картинке быть выше экрана */
+    max-height: 100vh; 
+    /* Сохраняем пропорции, чтобы на ноуте не было сплющивания */
+    object-fit: contain; 
     display: block;
     cursor: zoom-in;
   }
