@@ -2,11 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<!-- Эти теги говорят телефону: "Я игра, открой меня на весь экран" -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Гра - Магазин</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,16 +10,15 @@
   html, body {
     width: 100%;
     height: 100%;
-    /* 100dvh - это современная магия. Она заставляет игру занимать ВЕСЬ экран, 
-       даже если браузерная панель скрывается/появляется */
     height: 100dvh; 
     overflow: hidden;
-    background: #000; 
+    background: #000; /* ЧИСТИЙ ЧЕРНЫЙ ФОН */
     display: flex;
     align-items: center;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    cursor: pointer;
   }
 
   #game-container {
@@ -63,14 +58,14 @@
 <script>
   const container = document.getElementById('game-container');
 
-  // Функція, яка миттєво підганяє розмір гри під екран
   function resizeGame() {
     const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
     const gameWidth = 1185;
-    const gameHeight = 835;
 
-    const scale = Math.min(windowWidth / gameWidth, windowHeight / gameHeight);
+    // МАГИЯ ЗДЕСЬ: Мы берем ширину экрана и делим на ширину картинки.
+    // Это заставляет картинку ВСЕГДА заполнять экран от левого до правого края!
+    // Высота подстраивается автоматически.
+    const scale = windowWidth / gameWidth;
     
     container.style.transform = `scale(${scale})`;
   }
@@ -80,21 +75,31 @@
   window.addEventListener('orientationchange', resizeGame);
   setTimeout(resizeGame, 100);
 
-  // Полноэкранный режим по клику (скрывает бар сверху)
-  function goFullscreen() {
-    const el = document.documentElement;
+  // --- УМНАЯ ПРОВЕРКА (Сайт или Приложение) ---
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  function toggleFullscreen() {
     if (!document.fullscreenElement) {
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(err => console.log(err));
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
-      }
+      const el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen().catch(err => console.log(err));
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
     }
   }
 
-  // Включаем фулскрин при первом клике/тапе
-  document.addEventListener('click', goFullscreen, { once: true });
-  document.addEventListener('touchstart', goFullscreen, { once: true });
+  if (!isStandalone) {
+    document.addEventListener('click', toggleFullscreen);
+    document.addEventListener('touchstart', (e) => {
+      if(e.cancelable) e.preventDefault(); 
+      toggleFullscreen();
+    }, { passive: false });
+  } else {
+    document.body.style.cursor = 'default';
+  }
 </script>
 
 </body>
