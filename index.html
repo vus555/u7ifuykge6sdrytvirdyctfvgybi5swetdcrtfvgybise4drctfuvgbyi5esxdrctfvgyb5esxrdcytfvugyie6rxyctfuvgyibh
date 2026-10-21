@@ -12,13 +12,12 @@
     height: 100%;
     height: 100dvh; 
     overflow: hidden;
-    background: #000; /* ЧИСТИЙ ЧЕРНЫЙ ФОН */
+    background: #000; 
     display: flex;
     align-items: center;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    cursor: pointer;
   }
 
   #game-container {
@@ -37,45 +36,139 @@
     pointer-events: none; 
   }
 
-  .overlay-photo {
+  /* --- КАССА --- */
+  .cashier-wrapper {
     position: absolute;
     left: 1.18%;
     top: 49.87%;
     width: 36.52%;
     height: auto;
-    pointer-events: none;
-    display: block;
+    pointer-events: auto; 
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
   }
+
+  .overlay-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none; 
+  }
+
+  .cashier-squish {
+    transform: scale(0.96) translateY(4px); 
+    transition: transform 0.1s ease-out; 
+  }
+
+  /* --- ВЫЛЕТАЮЩИЕ ЦИФРЫ --- */
+  .floating-text {
+    position: absolute;
+    top: 20%; 
+    left: 50%;
+    transform: translateX(-50%);
+    
+    color: #55e86d; 
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif; 
+    font-size: 27px; 
+    font-weight: 900; 
+    letter-spacing: 1px; 
+    
+    -webkit-text-stroke: 1.5px #1a4a1a; 
+    text-shadow: 
+      0px 3px 0px #1a4a1a, 
+      0px 5px 10px rgba(0,0,0,0.8); 
+      
+    pointer-events: none;
+    opacity: 0;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  .text-fly {
+    animation: flyUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  @keyframes flyUp {
+    0% { 
+      opacity: 0; 
+      transform: translate(-50%, 10px) scale(0.5) rotate(-10deg); 
+    }
+    15% { 
+      opacity: 1; 
+      transform: translate(-50%, -20px) scale(1.1) rotate(5deg); 
+    }
+    25% {
+      transform: translate(-50%, -30px) scale(1) rotate(0deg); 
+    }
+    80% {
+      opacity: 1;
+    }
+    100% { 
+      opacity: 0; 
+      /* ИЗМЕНЕНО ЗДЕСЬ: текст улетает вверх не так далеко (-90px вместо -150px) */
+      transform: translate(-50%, -90px) scale(1.1); 
+    }
+  }
+
 </style>
 </head>
 <body>
 
   <div id="game-container">
     <img src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png" class="bg-image" alt="Магазин">
-    <img src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png" class="overlay-photo" alt="Каса">
+    
+    <div class="cashier-wrapper" id="cashierWrapper">
+      <img src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png" class="overlay-photo" id="cashierImg" alt="Каса">
+      <div id="textContainer"></div>
+    </div>
   </div>
 
 <script>
   const container = document.getElementById('game-container');
+  const cashier = document.getElementById('cashierWrapper');
+  const textContainer = document.getElementById('textContainer');
 
   function resizeGame() {
     const windowWidth = window.innerWidth;
     const gameWidth = 1185;
-
-    // МАГИЯ ЗДЕСЬ: Мы берем ширину экрана и делим на ширину картинки.
-    // Это заставляет картинку ВСЕГДА заполнять экран от левого до правого края!
-    // Высота подстраивается автоматически.
     const scale = windowWidth / gameWidth;
-    
     container.style.transform = `scale(${scale})`;
   }
 
   window.addEventListener('load', resizeGame);
   window.addEventListener('resize', resizeGame);
   window.addEventListener('orientationchange', resizeGame);
-  setTimeout(resizeGame, 100);
 
-  // --- УМНАЯ ПРОВЕРКА (Сайт или Приложение) ---
+  cashier.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+
+    cashier.classList.add('cashier-squish');
+    setTimeout(() => {
+      cashier.classList.remove('cashier-squish');
+    }, 100);
+
+    createMoneyText();
+  });
+
+  function createMoneyText() {
+    const moneyText = document.createElement('div');
+    moneyText.className = 'floating-text';
+    moneyText.innerText = '+1.00$'; 
+    
+    const randomX = Math.floor(Math.random() * 60) - 30; 
+    moneyText.style.marginLeft = `${randomX}px`;
+
+    textContainer.appendChild(moneyText);
+
+    requestAnimationFrame(() => {
+      moneyText.classList.add('text-fly');
+    });
+
+    setTimeout(() => {
+      moneyText.remove();
+    }, 1200);
+  }
+
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   function toggleFullscreen() {
