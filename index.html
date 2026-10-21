@@ -12,37 +12,25 @@
     height: 100%;
     overflow: hidden;
     background: #000;
+    
+    /* Центруем картинку по вертикали (если она ниже экрана) */
     display: flex;
     align-items: center;
-    justify-content: center;
-  }
-
-  /* Размытый фон (заполняет рамки на ноутбуке) */
-  .blur-bg {
-    position: absolute;
-    top: -5%; left: -5%;
-    width: 110%; height: 110%;
-    background-image: url('https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png');
-    background-size: cover;
-    background-position: center;
-    filter: blur(20px) brightness(0.4);
-    z-index: 1;
   }
 
   .photo {
-    width: 100vw;
-    max-height: 100vh; 
-    object-fit: contain; /* Сохраняет пропорции, касса не сплющивается */
+    /* ШИРИНА ВСЕГДА 100% ЭКРАНА (до левого и правого края) */
+    width: 100vw; 
+    
+    /* ВЫСОТА АВТОМАТИЧЕСКАЯ (пропорции не ломаются, касса не сплющивается) */
+    height: auto; 
+    
     display: block;
     cursor: zoom-in;
-    z-index: 2; /* Картинка поверх размытого фона */
-    position: relative;
   }
 </style>
 </head>
 <body>
-
-  <div class="blur-bg"></div>
 
   <img
     src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png"
