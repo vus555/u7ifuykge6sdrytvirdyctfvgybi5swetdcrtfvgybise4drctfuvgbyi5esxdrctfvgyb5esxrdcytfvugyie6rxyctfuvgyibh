@@ -2,49 +2,46 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Гра - Магазин (Тільки зверху/знизу рамки)</title>
+<!-- Эти теги говорят телефону: "Я игра, открой меня на весь экран" -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Гра - Магазин</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
     width: 100%;
     height: 100%;
+    /* 100dvh - это современная магия. Она заставляет игру занимать ВЕСЬ экран, 
+       даже если браузерная панель скрывается/появляется */
+    height: 100dvh; 
     overflow: hidden;
-    background: #000; /* Чорний фон для смуг зверху і знизу */
-    
-    /* Центруємо гру по вертикалі та горизонталі */
+    background: #000; 
     display: flex;
     align-items: center;
     justify-content: center;
-    
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 
-  /* Ігрова сцена */
   #game-container {
     position: relative;
-    
-    /* МАГІЯ: Завжди 100% ширини екрана! */
-    width: 100vw; 
-    
-    /* Висота підлаштовується під пропорції картинки (1185 / 835) */
-    aspect-ratio: 1185 / 835; 
-    
+    width: 1185px; 
+    height: 835px;
     flex-shrink: 0;
+    transform-origin: center center;
   }
 
-  /* Фон */
   .bg-image {
     width: 100%;
     height: 100%;
-    /* fill безпечний, бо контейнер вже має правильні пропорції */
     object-fit: fill; 
     display: block;
     pointer-events: none; 
   }
 
-  /* Каса (стоїть на своєму місці) */
   .overlay-photo {
     position: absolute;
     left: 1.18%;
@@ -62,6 +59,43 @@
     <img src="https://i.postimg.cc/0y2djZ8d/file-00000000beb882439e314b43f17d013b.png" class="bg-image" alt="Магазин">
     <img src="https://i.postimg.cc/FK9Kf2vN/file-00000000df8081f4a6bfb0b9c582112a.png" class="overlay-photo" alt="Каса">
   </div>
+
+<script>
+  const container = document.getElementById('game-container');
+
+  // Функція, яка миттєво підганяє розмір гри під екран
+  function resizeGame() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const gameWidth = 1185;
+    const gameHeight = 835;
+
+    const scale = Math.min(windowWidth / gameWidth, windowHeight / gameHeight);
+    
+    container.style.transform = `scale(${scale})`;
+  }
+
+  window.addEventListener('load', resizeGame);
+  window.addEventListener('resize', resizeGame);
+  window.addEventListener('orientationchange', resizeGame);
+  setTimeout(resizeGame, 100);
+
+  // Полноэкранный режим по клику (скрывает бар сверху)
+  function goFullscreen() {
+    const el = document.documentElement;
+    if (!document.fullscreenElement) {
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(err => console.log(err));
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    }
+  }
+
+  // Включаем фулскрин при первом клике/тапе
+  document.addEventListener('click', goFullscreen, { once: true });
+  document.addEventListener('touchstart', goFullscreen, { once: true });
+</script>
 
 </body>
 </html>
